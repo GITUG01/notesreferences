@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">notesreferences</string>
+    <string name="app_name"></string>
     <string name="app_title">AppName</string>
     <string name="items">Button</string>
     <string name="settings">set</string>
+    <string name="add">add note</string>
+    <string name="remove">remove note</string>
 </resources>
