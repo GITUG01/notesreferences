@@ -38,8 +38,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         noteRepo.addNote(new NoteEntity("Note 1", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 2", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 2", "Some пп ппп  п пп п пп пщиопьишорт ропешо иешиотештепш ие икг икщг р пп е и рн тр нт  нтнт г нри  епи   епиепипеиtext"));
         noteRepo.addNote(new NoteEntity("Note 3", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
+        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
         noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
 
     }
