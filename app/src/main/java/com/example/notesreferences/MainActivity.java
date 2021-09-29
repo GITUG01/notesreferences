@@ -1,11 +1,13 @@
 package com.example.notesreferences;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
-    TextView item;
 
     NoteRepo noteRepo = new NoteRepoImpl();
     private NotesAdapter adapter = new NotesAdapter();
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.add_note:
+                Intent intent = new Intent(this, NoteActivity.class);
+                startActivityForResult(intent, 1);
                 Toast.makeText(this, "Add some note", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.del_menu:
@@ -88,6 +91,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            String title = data.getStringExtra(NoteActivity.TITLE_KEY);
+            String description = data.getStringExtra(NoteActivity.DESCRIPTION_KEY);
+            noteRepo.addNote(new NoteEntity(title, description));
+        }
     }
 
     private void setCategoryAdapter(List<CategoryEmpty> categoryEmptyList){
