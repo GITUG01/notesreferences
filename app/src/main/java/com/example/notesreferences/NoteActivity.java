@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.notesreferences.domain.NotesDatabase;
+
 public class NoteActivity extends AppCompatActivity {
 
     EditText title;
@@ -28,9 +30,14 @@ public class NoteActivity extends AppCompatActivity {
         btn = findViewById(R.id.save_btn);
 
         btn.setOnClickListener(view -> {
+            String titleStr = title.getText().toString();
+            String descriptionStr = description.getText().toString();
+
+            NotesDatabase notesDatabase = new NotesDatabase();
+            notesDatabase.addToBD(this, titleStr, descriptionStr);
             Intent intent = new Intent();
-            intent.putExtra(TITLE_KEY, title.getText().toString());
-            intent.putExtra(DESCRIPTION_KEY, description.getText().toString());
+            intent.putExtra(TITLE_KEY, titleStr);
+            intent.putExtra(DESCRIPTION_KEY, descriptionStr);
             setResult(RESULT_OK, intent);
             finish();
         });

@@ -5,4 +5,5 @@
     <string name="settings">set</string>
     <string name="add">add note</string>
     <string name="remove">remove note</string>
+    <string name="read_notes_history">notes history</string>
 </resources>

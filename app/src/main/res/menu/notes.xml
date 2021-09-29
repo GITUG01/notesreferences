@@ -10,4 +10,9 @@
         android:id="@+id/add_note"
         android:title="@string/add"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/read_notes"
+        android:title="@string/read_notes_history"
+        app:showAsAction="never"/>
 </menu>

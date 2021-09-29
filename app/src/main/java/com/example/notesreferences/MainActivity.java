@@ -60,13 +60,6 @@ public class MainActivity extends AppCompatActivity {
         noteRepo.addNote(new NoteEntity("Note 1", "Some text"));
         noteRepo.addNote(new NoteEntity("Note 2", "Some пп ппп  п пп п пп пщиопьишорт ропешо иешиотештепш ие икг икщг р пп е и рн тр нт  нтнт г нри  епи   епиепипеиtext"));
         noteRepo.addNote(new NoteEntity("Note 3", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 4", "Some text"));
 
     }
 
@@ -83,11 +76,15 @@ public class MainActivity extends AppCompatActivity {
             case R.id.add_note:
                 Intent intent = new Intent(this, NoteActivity.class);
                 startActivityForResult(intent, 1);
-                Toast.makeText(this, "Add some note", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Add note", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.del_menu:
-                Toast.makeText(this, "Remove some menu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Remove menu", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.read_notes:
+                Intent intent02 = new Intent(this, NoteHistoryActivity.class);
+                startActivity(intent02);
+
         }
 
         return super.onOptionsItemSelected(item);
