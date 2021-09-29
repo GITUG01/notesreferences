@@ -13,6 +13,6 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    public TextView item = itemView.findViewById(R.id.item);
+    public TextView item = itemView.findViewById(R.id.title_item);
 
 }
