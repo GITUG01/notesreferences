@@ -1,10 +1,13 @@
 package com.example.notesreferences.categories.ui;
 
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notesreferences.R;
 import com.example.notesreferences.categories.domain.CategoryEmpty;
 
 import java.util.List;
@@ -19,7 +22,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note, parent, false);
+        return new CategoryViewHolder(view);
     }
 
     @Override
