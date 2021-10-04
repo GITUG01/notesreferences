@@ -35,8 +35,8 @@ public class NoteActivity extends AppCompatActivity {
             String titleStr = title.getText().toString();
             String descriptionStr = description.getText().toString();
 
-            NotesDatabase notesDatabase = new NotesDatabase();
-            notesDatabase.addToBD(this, titleStr, descriptionStr);
+//            NotesDatabase notesDatabase = new NotesDatabase();
+//            notesDatabase.addToBD(this, titleStr, descriptionStr);
             Intent intent = new Intent();
             intent.putExtra(TITLE_KEY, titleStr);
             intent.putExtra(DESCRIPTION_KEY, descriptionStr);

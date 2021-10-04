@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -19,6 +20,7 @@ import com.example.notesreferences.categories.domain.CategoryEmpty;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
+import com.example.notesreferences.domain.NotesDatabase;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
 
@@ -92,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        NotesDatabase notesDatabase = new NotesDatabase();
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             String title = data.getStringExtra(NoteActivity.TITLE_KEY);
             String description = data.getStringExtra(NoteActivity.DESCRIPTION_KEY);
+            notesDatabase.addToBD(this, title, description);
             noteRepo.addNote(new NoteEntity(title, description));
         }
     }
