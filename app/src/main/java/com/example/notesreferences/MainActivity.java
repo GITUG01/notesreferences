@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         setCategoryAdapter(categories);
 
 
-
         noteRepo.addNote(new NoteEntity("Note 1", "Some text"));
         noteRepo.addNote(new NoteEntity("Note 2", "Some пп ппп  п пп п пп пщиопьишорт ропешо иешиотештепш ие икг икщг р пп е и рн тр нт  нтнт г нри  епи   епиепипеиtext"));
         noteRepo.addNote(new NoteEntity("Note 3", "Some text"));
@@ -74,10 +74,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.add_note:
-                Intent intent = new Intent(this, NoteActivity.class);
-                startActivityForResult(intent, 1);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.hg2, new CreateNoteFragment())
+                        .commit();
                 Toast.makeText(this, "Add note", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.del_menu:
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setCategoryAdapter(List<CategoryEmpty> categoryEmptyList){
+    private void setCategoryAdapter(List<CategoryEmpty> categoryEmptyList) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
 
         recyclerItem = findViewById(R.id.item_recycler);
