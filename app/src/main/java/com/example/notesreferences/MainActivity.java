@@ -28,7 +28,7 @@ import com.example.notesreferences.ui.NotesAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.sendData {
     private Toolbar toolbar;
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         noteRepo.addNote(new NoteEntity("Note 2", "Some пп ппп  п пп п пп пщиопьишорт ропешо иешиотештепш ие икг икщг р пп е и рн тр нт  нтнт г нри  епи   епиепипеиtext"));
         noteRepo.addNote(new NoteEntity("Note 3", "Some text"));
 
+
     }
 
     @Override
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .add(R.id.hg2, new CreateNoteFragment())
+                        .addToBackStack(null)
                         .commit();
                 Toast.makeText(this, "Add note", Toast.LENGTH_SHORT).show();
                 break;
@@ -115,5 +117,12 @@ public class MainActivity extends AppCompatActivity {
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, categoryEmptyList);
 
         recyclerItem.setAdapter(categoryAdapter);
+    }
+
+    @Override
+    public void sendData(String title, String description) {
+//        if (!(title.isEmpty()) && !(description.isEmpty())) {
+            noteRepo.addNote(new NoteEntity(title, description));
+//        }
     }
 }
