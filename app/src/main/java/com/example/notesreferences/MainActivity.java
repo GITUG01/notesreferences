@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         noteRepo.addNote(new NoteEntity("Note 2", "Some пп ппп  п пп п пп пщиопьишорт ропешо иешиотештепш ие икг икщг р пп е и рн тр нт  нтнт г нри  епи   епиепипеиtext"));
         noteRepo.addNote(new NoteEntity("Note 3", "Some text"));
 
-
     }
 
     @Override
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
             case R.id.add_note:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.hg2, new CreateNoteFragment())
+                        .add(R.id.fragment_container, new CreateNoteFragment())
                         .addToBackStack(null)
                         .commit();
                 Toast.makeText(this, "Add note", Toast.LENGTH_SHORT).show();
@@ -96,18 +95,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        NotesDatabase notesDatabase = new NotesDatabase();
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            String title = data.getStringExtra(NoteActivity.TITLE_KEY);
-            String description = data.getStringExtra(NoteActivity.DESCRIPTION_KEY);
-            notesDatabase.addToBD(this, title, description);
-            noteRepo.addNote(new NoteEntity(title, description));
-        }
-    }
-
     private void setCategoryAdapter(List<CategoryEmpty> categoryEmptyList) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
 
@@ -121,8 +108,11 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
     @Override
     public void sendData(String title, String description) {
+        NotesDatabase notesDatabase = new NotesDatabase();
 //        if (!(title.isEmpty()) && !(description.isEmpty())) {
+        notesDatabase.addToBD(this, title, description);
             noteRepo.addNote(new NoteEntity(title, description));
+            adapter.setData(noteRepo.notes());
 //        }
     }
 }

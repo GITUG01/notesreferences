@@ -9,6 +9,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 
 import com.example.notesreferences.MainActivity;
@@ -40,7 +41,7 @@ public class NotesDatabase {
 
     }
 
-//    public void getData() {
+//    public void writeData(@IdRes int id){
 //        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
 //
 //        if (c.moveToFirst()) {
@@ -49,7 +50,7 @@ public class NotesDatabase {
 //            int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
 //
 //            do {
-//                textView.append("Note № " + c.getInt(columnID) +
+//                id.append("Note № " + c.getInt(columnID) +
 //                        " Title: " + c.getString(columnTitle) +
 //                        " Description: +" + c.getString(columnDescription));
 //            } while (c.moveToNext());
@@ -60,6 +61,9 @@ public class NotesDatabase {
 //        }
 //        c.close();
 //    }
+
+
+
 
 
     static class BDHelper extends SQLiteOpenHelper {

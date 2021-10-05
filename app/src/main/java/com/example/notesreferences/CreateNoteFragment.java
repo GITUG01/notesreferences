@@ -1,10 +1,12 @@
 package com.example.notesreferences;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -42,11 +44,15 @@ public class CreateNoteFragment extends Fragment {
         title = view.findViewById(R.id.title_et);
         description = view.findViewById(R.id.description_et);
         save = view.findViewById(R.id.save_btn);
-        save.setOnClickListener(view1 -> sendData.sendData(title.getText().toString(), description.getText().toString()));
+        save.setOnClickListener(view1 -> {
+            sendData.sendData(title.getText().toString(), description.getText().toString());
+            getFragmentManager().beginTransaction().remove(CreateNoteFragment.this).commit();
+//            getActivity().getFragmentManager().popBackStack();
+        });
 
     }
 
-    interface sendData{
+    interface sendData {
         void sendData(String title, String description);
     }
 }
