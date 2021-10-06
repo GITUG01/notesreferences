@@ -35,17 +35,17 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<!--    <FrameLayout-->
+<!--        android:id="@+id/fragment_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
 
-        <LinearLayout
-            android:id="@+id/main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/main_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="horizontal">-->
 
 
             <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
@@ -124,6 +124,6 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+<!--    </FrameLayout>-->
 
-</LinearLayout>
+<!--</LinearLayout>-->

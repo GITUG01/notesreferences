@@ -19,12 +19,15 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.notesreferences.categories.domain.CategoryEmpty;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
+import com.example.notesreferences.categories.ui.CategoryViewHolder;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.domain.NotesDatabase;
@@ -34,7 +37,7 @@ import com.example.notesreferences.ui.NotesAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.sendData {
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener {
     private Toolbar toolbar;
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
@@ -42,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     NoteRepo noteRepo = new NoteRepoImpl();
     private NotesAdapter adapter = new NotesAdapter();
     public final static String TABLE_NAME = "mytable";
-    //    private NotesDatabase.BDHelper bdHelper;
     private BDHelper bdHelper;
     SQLiteDatabase bd;
+    public List<CategoryEmpty> categories = new ArrayList<>();
 
 
     @Override
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         recyclerView.setAdapter(adapter);
         adapter.setData(noteRepo.notes());
 
-        List<CategoryEmpty> categories = new ArrayList<>();
+
         categories.add(new CategoryEmpty(1, "Day note"));
         categories.add(new CategoryEmpty(2, "Long-term"));
         categories.add(new CategoryEmpty(3, "Temporary"));
@@ -69,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
         setCategoryAdapter(categories);
 
-        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
+//        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
 
     }
 
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         recyclerItem = findViewById(R.id.item_recycler);
         recyclerItem.setLayoutManager(layoutManager);
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(this, categoryEmptyList);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this, categoryEmptyList, this);
 
         recyclerItem.setAdapter(categoryAdapter);
     }
@@ -117,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     @Override
     public void sendData(String title, String description) {
         NotesDatabase notesDatabase = new NotesDatabase();
-//        if (!(title.isEmpty()) && !(description.isEmpty())) {
-//        notesDatabase.addToBD(this, title, description);
         noteRepo.addNote(new NoteEntity(title, description));
         DataBase(title, description);
         adapter.setData(noteRepo.notes());
@@ -135,25 +136,41 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         cv.put(NoteActivity.DESCRIPTION_KEY, description);
 
         bd.insert(TABLE_NAME, null, cv);
+        Log.d("@@@ mylogs", "Create note. Title: " + title +" Description: " + description);
+    }
 
-        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
+public void writeDataBase(){
+    Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
 
-        if (c.moveToFirst()) {
-            int columnID = c.getColumnIndex("id");
-            int columnTitle = c.getColumnIndex(NoteActivity.TITLE_KEY);
-            int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
+    if (c.moveToFirst()) {
+        int columnID = c.getColumnIndex("id");
+        int columnTitle = c.getColumnIndex(NoteActivity.TITLE_KEY);
+        int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
 
-            do {
-                Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
-                        " Title: " + c.getString(columnTitle) +
-                        " Description: " + c.getString(columnDescription));
-            } while (c.moveToNext());
+        do {
+            Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
+                    " Title: " + c.getString(columnTitle) +
+                    " Description: " + c.getString(columnDescription));
+        } while (c.moveToNext());
 
-        } else {
-            Log.d("@@@ mylogs", "That's all");
+    } else {
+        Log.d("@@@ mylogs", "That's all");
 
-        }
-        c.close();
+    }
+    c.close();
+}
+
+
+
+
+    @Override
+    public void onCategoryClick(int position) {
+        categories.get(position);
+        Toast.makeText(this, "Open new fragment", Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new CreateNoteFragment())     //test variant
+                .commit();
     }
 
     static class BDHelper extends SQLiteOpenHelper {
