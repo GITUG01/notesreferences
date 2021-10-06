@@ -15,14 +15,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.notesreferences.categories.domain.CategoryEmpty;
@@ -119,12 +114,46 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
     @Override
     public void sendData(String title, String description) {
-        NotesDatabase notesDatabase = new NotesDatabase();
         noteRepo.addNote(new NoteEntity(title, description));
         DataBase(title, description);
         adapter.setData(noteRepo.notes());
 //        }
     }
+
+    @Override
+    public void onCategoryClick(int position) {
+        categories.get(position);
+        switch (position) {
+            case 0:
+                Toast.makeText(this, "case 0", Toast.LENGTH_SHORT).show();
+                createFragment(new CategoryDayNoteFragment());
+                break;
+            case 1:
+                Toast.makeText(this, "case 1", Toast.LENGTH_SHORT).show();
+                createFragment(new CreateNoteFragment());
+                break;
+            case 2:
+                Toast.makeText(this, "case 2", Toast.LENGTH_SHORT).show();
+                createFragment(new CategoryTemporaryFragment());
+                break;
+            case 3:
+                Toast.makeText(this, "case 3", Toast.LENGTH_SHORT).show();
+                createFragment(new CategoryProductListFragment());
+                break;
+            case 4:
+                Toast.makeText(this, "case 4", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void createFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
 
     public void DataBase(String title, String description) {
         bdHelper = new BDHelper(this);
@@ -136,41 +165,28 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         cv.put(NoteActivity.DESCRIPTION_KEY, description);
 
         bd.insert(TABLE_NAME, null, cv);
-        Log.d("@@@ mylogs", "Create note. Title: " + title +" Description: " + description);
+        Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
     }
 
-public void writeDataBase(){
-    Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
+    public void writeDataBase() {
+        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
 
-    if (c.moveToFirst()) {
-        int columnID = c.getColumnIndex("id");
-        int columnTitle = c.getColumnIndex(NoteActivity.TITLE_KEY);
-        int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
+        if (c.moveToFirst()) {
+            int columnID = c.getColumnIndex("id");
+            int columnTitle = c.getColumnIndex(NoteActivity.TITLE_KEY);
+            int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
 
-        do {
-            Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
-                    " Title: " + c.getString(columnTitle) +
-                    " Description: " + c.getString(columnDescription));
-        } while (c.moveToNext());
+            do {
+                Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
+                        " Title: " + c.getString(columnTitle) +
+                        " Description: " + c.getString(columnDescription));
+            } while (c.moveToNext());
 
-    } else {
-        Log.d("@@@ mylogs", "That's all");
+        } else {
+            Log.d("@@@ mylogs", "That's all");
 
-    }
-    c.close();
-}
-
-
-
-
-    @Override
-    public void onCategoryClick(int position) {
-        categories.get(position);
-        Toast.makeText(this, "Open new fragment", Toast.LENGTH_SHORT).show();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new CreateNoteFragment())     //test variant
-                .commit();
+        }
+        c.close();
     }
 
     static class BDHelper extends SQLiteOpenHelper {
@@ -193,3 +209,5 @@ public void writeDataBase(){
         }
     }
 }
+
+

@@ -109,6 +109,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Recent notes"
+                    android:textSize="30sp"
+                    android:gravity="center_horizontal"/>
+
                 <FrameLayout
                     android:id="@+id/note_fragment_container"
                     android:layout_width="match_parent"
@@ -124,6 +131,13 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/navigation_menu"
+            android:layout_gravity="bottom"/>
 
     </FrameLayout>
 

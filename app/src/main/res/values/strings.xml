@@ -11,4 +11,7 @@
     <string name="create_note_description">Enter a description</string>
     <string name="create_note_title">I\'m title</string>
     <string name="create_note_save_button">save</string>
+    <string name="home_menu">home</string>
+    <string name="favourites_menu">favourites</string>
+    <string name="settings_menu">settings</string>
 </resources>
