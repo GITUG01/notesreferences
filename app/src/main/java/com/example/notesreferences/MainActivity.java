@@ -8,9 +8,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -35,6 +41,11 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
     NoteRepo noteRepo = new NoteRepoImpl();
     private NotesAdapter adapter = new NotesAdapter();
+    public final static String TABLE_NAME = "mytable";
+    //    private NotesDatabase.BDHelper bdHelper;
+    private BDHelper bdHelper;
+    SQLiteDatabase bd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +61,15 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         adapter.setData(noteRepo.notes());
 
         List<CategoryEmpty> categories = new ArrayList<>();
-        categories.add(new CategoryEmpty(1, "Заметки на день"));
-        categories.add(new CategoryEmpty(2, "Долгосрочные"));
-        categories.add(new CategoryEmpty(3, "Временные"));
-        categories.add(new CategoryEmpty(3, "Еще что-то"));
-        categories.add(new CategoryEmpty(3, "И еще что-то"));
+        categories.add(new CategoryEmpty(1, "Day note"));
+        categories.add(new CategoryEmpty(2, "Long-term"));
+        categories.add(new CategoryEmpty(3, "Temporary"));
+        categories.add(new CategoryEmpty(3, "Product list"));
+        categories.add(new CategoryEmpty(3, "And something else"));
 
         setCategoryAdapter(categories);
 
-
-        noteRepo.addNote(new NoteEntity("Note 1", "Some text"));
-        noteRepo.addNote(new NoteEntity("Note 2", "Some пп ппп  п пп п пп пщиопьишорт ропешо иешиотештепш ие икг икщг р пп е и рн тр нт  нтнт г нри  епи   епиепипеиtext"));
-        noteRepo.addNote(new NoteEntity("Note 3", "Some text"));
+        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
 
     }
 
@@ -110,9 +118,61 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     public void sendData(String title, String description) {
         NotesDatabase notesDatabase = new NotesDatabase();
 //        if (!(title.isEmpty()) && !(description.isEmpty())) {
-        notesDatabase.addToBD(this, title, description);
-            noteRepo.addNote(new NoteEntity(title, description));
-            adapter.setData(noteRepo.notes());
+//        notesDatabase.addToBD(this, title, description);
+        noteRepo.addNote(new NoteEntity(title, description));
+        DataBase(title, description);
+        adapter.setData(noteRepo.notes());
 //        }
+    }
+
+    public void DataBase(String title, String description) {
+        bdHelper = new BDHelper(this);
+        ContentValues cv = new ContentValues();
+
+        bd = bdHelper.getWritableDatabase();
+
+        cv.put(NoteActivity.TITLE_KEY, title);
+        cv.put(NoteActivity.DESCRIPTION_KEY, description);
+
+        bd.insert(TABLE_NAME, null, cv);
+
+        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
+
+        if (c.moveToFirst()) {
+            int columnID = c.getColumnIndex("id");
+            int columnTitle = c.getColumnIndex(NoteActivity.TITLE_KEY);
+            int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
+
+            do {
+                Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
+                        " Title: " + c.getString(columnTitle) +
+                        " Description: " + c.getString(columnDescription));
+            } while (c.moveToNext());
+
+        } else {
+            Log.d("@@@ mylogs", "That's all");
+
+        }
+        c.close();
+    }
+
+    static class BDHelper extends SQLiteOpenHelper {
+
+        public BDHelper(@Nullable Context context) {
+            super(context, TABLE_NAME, null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            sqLiteDatabase.execSQL("create table " + TABLE_NAME + " ("
+                    + "id integer primary key autoincrement,"
+                    + "description text,"
+                    + "title text" + ");");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+        }
     }
 }

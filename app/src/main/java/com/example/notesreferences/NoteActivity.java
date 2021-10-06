@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import com.example.notesreferences.domain.NotesDatabase;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -18,7 +15,6 @@ public class NoteActivity extends AppCompatActivity {
 
     public static final String TITLE_KEY = "title";
     public final static String DESCRIPTION_KEY = "description";
-
 
 
     @Override
