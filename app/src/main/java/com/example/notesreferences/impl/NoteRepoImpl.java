@@ -8,27 +8,27 @@ import java.util.List;
 
 public class NoteRepoImpl implements NoteRepo {
 
-    private ArrayList<NoteEntity> cashe = new ArrayList<>();
+    private final ArrayList<NoteEntity> cache = new ArrayList<>();
     private int counter = 0;
 
     @Override
     public List<NoteEntity> notes() {
-        return cashe;
+        return cache;
     }
 
     @Override
     public Integer addNote(NoteEntity note) {
         int newId = ++counter;
         note.setId(counter);
-        cashe.add(note);
+        cache.add(note);
         return newId;
     }
 
     @Override
     public boolean removeNote(int id) {
-        for (int i = 0; i < cashe.size(); i++) {
-            if (cashe.get(i).getId() == id){
-                cashe.remove(i);
+        for (int i = 0; i < cache.size(); i++) {
+            if (cache.get(i).getId() == id){
+                cache.remove(i);
                 return true;
             }
         }
@@ -39,7 +39,7 @@ public class NoteRepoImpl implements NoteRepo {
     public boolean editNote(int id, NoteEntity note) {
         removeNote(id);
         note.setId(id);
-        cashe.add(note);
+        cache.add(note);
         return true;
     }
 }

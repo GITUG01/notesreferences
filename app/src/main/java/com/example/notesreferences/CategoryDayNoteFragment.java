@@ -1,64 +1,76 @@
 package com.example.notesreferences;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CategoryDayNoteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.notesreferences.categories.domain.CategoryEmpty;
+import com.example.notesreferences.domain.NoteEntity;
+import com.example.notesreferences.domain.NoteRepo;
+import com.example.notesreferences.impl.NoteRepoImpl;
+import com.example.notesreferences.ui.NotesAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class CategoryDayNoteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    RecyclerView recyclerView;
 
-    public CategoryDayNoteFragment() {
-        // Required empty public constructor
-    }
+    public NoteRepo noteRepo = new NoteRepoImpl();
+    private NotesAdapter adapter = new NotesAdapter();
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CategoryDayNoteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CategoryDayNoteFragment newInstance(String param1, String param2) {
-        CategoryDayNoteFragment fragment = new CategoryDayNoteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private String title;
+    private String description;
+
+//    public CategoryDayNoteFragment(String title, String description) {
+//        this.title = title;
+//        this.description = description;
+//    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_category_day_note, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.recycler_day_note);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+        adapter.setData(noteRepo.notes());
+        super.onViewCreated(view, savedInstanceState);
+        getParentFragmentManager().setFragmentResultListener("dataToDayNote", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String title = result.getString("title");
+                String description = result.getString("description");
+
+                noteRepo.addNote(new NoteEntity(title, description));
+            }
+        });
+    }
+
+    public void createNoteDay(String title, String description){
+        noteRepo.addNote(new NoteEntity(title, description));
     }
 }

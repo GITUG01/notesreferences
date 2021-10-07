@@ -4,15 +4,15 @@
     <item
         android:id="@+id/del_menu"
         android:title="@string/remove"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/add_note"
         android:title="@string/add"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/read_notes"
         android:title="@string/read_notes_history"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

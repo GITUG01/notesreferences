@@ -28,14 +28,21 @@ import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.domain.NotesDatabase;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.internal.NavigationMenu;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener {
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote{
     private Toolbar toolbar;
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
+    BottomNavigationView navigationView;
 
     NoteRepo noteRepo = new NoteRepoImpl();
     private NotesAdapter adapter = new NotesAdapter();
@@ -43,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     private BDHelper bdHelper;
     SQLiteDatabase bd;
     public List<CategoryEmpty> categories = new ArrayList<>();
+    private Map<Integer, Fragment> fragments = new HashMap<>();
+    private List<Integer> notesList = new ArrayList<>();
+    Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
 
     @Override
@@ -53,11 +63,27 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
+        fragmentMap.put(0, new CreateNoteFragment());   //test variant
+
+        navigationView = findViewById(R.id.navigation_menu);
+        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
+                                .commit();
+                }
+                return false;
+            }
+        });
+
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.setData(noteRepo.notes());
-
 
         categories.add(new CategoryEmpty(1, "Day note"));
         categories.add(new CategoryEmpty(2, "Long-term"));
@@ -67,9 +93,14 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
         setCategoryAdapter(categories);
 
-//        Cursor c = bd.query(TABLE_NAME, null, null, null, null, null, null);
+        fragments.put(0, new CategoryDayNoteFragment());
+        fragments.put(1, new CategoryLongTermFragment());
+        fragments.put(2, new CategoryProductListFragment());
+        fragments.put(3, new CategoryTemporaryFragment());
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,9 +123,9 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
             case R.id.del_menu:
                 Toast.makeText(this, "Remove menu", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.read_notes:
-                Intent intent02 = new Intent(this, NoteHistoryActivity.class);
-                startActivity(intent02);
+//            case R.id.read_notes:
+//                Intent intent02 = new Intent(this, NoteHistoryActivity.class);
+//                startActivity(intent02);
 
         }
 
@@ -114,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
     @Override
     public void sendData(String title, String description) {
+        notesList.add(noteRepo.addNote(new NoteEntity(title, description)));
         noteRepo.addNote(new NoteEntity(title, description));
         DataBase(title, description);
         adapter.setData(noteRepo.notes());
@@ -121,28 +153,17 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     }
 
     @Override
+    public void sendDataToDayNote(String title, String description) {
+
+    }
+
+    @Override
     public void onCategoryClick(int position) {
         categories.get(position);
-        switch (position) {
-            case 0:
-                Toast.makeText(this, "case 0", Toast.LENGTH_SHORT).show();
-                createFragment(new CategoryDayNoteFragment());
-                break;
-            case 1:
-                Toast.makeText(this, "case 1", Toast.LENGTH_SHORT).show();
-                createFragment(new CreateNoteFragment());
-                break;
-            case 2:
-                Toast.makeText(this, "case 2", Toast.LENGTH_SHORT).show();
-                createFragment(new CategoryTemporaryFragment());
-                break;
-            case 3:
-                Toast.makeText(this, "case 3", Toast.LENGTH_SHORT).show();
-                createFragment(new CategoryProductListFragment());
-                break;
-            case 4:
-                Toast.makeText(this, "case 4", Toast.LENGTH_SHORT).show();
-        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, Objects.requireNonNull(fragments.get(position)))
+                .commit();
     }
 
 
@@ -188,6 +209,17 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         }
         c.close();
     }
+
+//    @Override
+//    public void onCategoryClick() {
+//        public void onCategoryClick(int position) {
+//            categories.get(position);
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.fragment_container, Objects.requireNonNull(MainActivityFragment.fragments.get(position)))
+//                    .commit();
+//        }
+//    }
 
     static class BDHelper extends SQLiteOpenHelper {
 
