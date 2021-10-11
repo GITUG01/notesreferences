@@ -1,16 +1,7 @@
 package com.example.notesreferences;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -20,16 +11,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.notesreferences.categories.domain.CategoryEmpty;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
 import com.example.notesreferences.categories.ui.CategoryViewHolder;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
-import com.example.notesreferences.domain.NotesDatabase;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenu;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
@@ -38,22 +35,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote{
-    private Toolbar toolbar;
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startMainFragment, CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote, CreateNoteFragment.closeCreateNote {
+    public final static String DATA_TEMPORARY = "dadaFromTemporary";
+    public final static String DATA_TEMPORARY_TO_MAIN = "dadaFromTemporaryToMain";
+    public final static String DATA_LONG_TERM = "dataFromLongTerm";
+    public final static String DATA_LONG_TERM_TO_MAIN = "dataFromLongTermToMain";
+    public final static String DATA_DAY_NOTE = "dataFromDayNote";
+    public final static String DATA_DAY_NOTE_TO_MAIN = "dataFromDayNoteToMain";
+
+    public final static String TABLE_NAME = "mytable";
+    public List<CategoryEmpty> categories = new ArrayList<>();
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
     BottomNavigationView navigationView;
-
     NoteRepo noteRepo = new NoteRepoImpl();
-    private NotesAdapter adapter = new NotesAdapter();
-    public final static String TABLE_NAME = "mytable";
-    private BDHelper bdHelper;
     SQLiteDatabase bd;
-    public List<CategoryEmpty> categories = new ArrayList<>();
-    private Map<Integer, Fragment> fragments = new HashMap<>();
-    private List<Integer> notesList = new ArrayList<>();
     Map<Integer, Fragment> fragmentMap = new HashMap<>();
-
+    private Toolbar toolbar;
+    private final NotesAdapter adapter = new NotesAdapter();
+    private BDHelper bdHelper;
+    private final Map<Integer, Fragment> fragments = new HashMap<>();
+    private final List<Integer> notesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,27 +65,35 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentMap.put(0, new CreateNoteFragment());   //test variant
+        fragmentMap.put(0, new MainActivityFragment());   //test variant
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
+                .commit();
+
 
         navigationView = findViewById(R.id.navigation_menu);
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.home:
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
+                                .addToBackStack(null)
                                 .commit();
+//                        setContentView(R.layout.activity_main);
                 }
                 return false;
             }
         });
 
-        recyclerView = findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        adapter.setData(noteRepo.notes());
+//        recyclerView = findViewById(R.id.recycler);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(adapter);
+//        adapter.setData(noteRepo.notes());
 
         categories.add(new CategoryEmpty(1, "Day note"));
         categories.add(new CategoryEmpty(2, "Long-term"));
@@ -99,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         fragments.put(3, new CategoryTemporaryFragment());
 
     }
-
 
 
     @Override
@@ -123,10 +132,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
             case R.id.del_menu:
                 Toast.makeText(this, "Remove menu", Toast.LENGTH_SHORT).show();
                 break;
-//            case R.id.read_notes:
-//                Intent intent02 = new Intent(this, NoteHistoryActivity.class);
-//                startActivity(intent02);
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         noteRepo.addNote(new NoteEntity(title, description));
         DataBase(title, description);
         adapter.setData(noteRepo.notes());
-//        }
     }
 
     @Override
@@ -163,14 +167,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, Objects.requireNonNull(fragments.get(position)))
-                .commit();
-    }
-
-
-    public void createFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -210,16 +206,20 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         c.close();
     }
 
-//    @Override
-//    public void onCategoryClick() {
-//        public void onCategoryClick(int position) {
-//            categories.get(position);
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, Objects.requireNonNull(MainActivityFragment.fragments.get(position)))
-//                    .commit();
-//        }
-//    }
+    @Override
+    public void closeCreateNote() {
+        getFragmentManager().popBackStack();
+
+    }
+
+    @Override
+    public void startMainFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
+                .commit();
+    }
+
 
     static class BDHelper extends SQLiteOpenHelper {
 

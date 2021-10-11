@@ -1,14 +1,7 @@
 package com.example.notesreferences;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +10,30 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 public class CreateNoteFragment extends Fragment {
 
-    private sendDataToDayNote sendDataToDayNote;
-    private sendData sendData;
     EditText title;
     EditText description;
     Button save;
     CheckBox day;
     CheckBox longTerm;
     CheckBox temporary;
+    private sendDataToDayNote sendDataToDayNote;
+    private sendData sendData;
+    private sendDataToLongTerm sendDataToLongTerm;
+    private startMainFragment startMainFragment;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.sendData = (sendData) context;
         this.sendDataToDayNote = (sendDataToDayNote) context;
+//        this.sendDataToLongTerm = (sendDataToLongTerm) context;
+        this.startMainFragment = (startMainFragment) context;
     }
 
     @Override
@@ -58,33 +59,33 @@ public class CreateNoteFragment extends Fragment {
         save = view.findViewById(R.id.save_btn);
         save.setOnClickListener(view1 -> {
 
-            if (day.isChecked()){
-//                sendData.sendData(title.getText().toString(), description.getText().toString());
-                bundleSendData("dataToDayNote");
-                getFragmentManager().beginTransaction().addToBackStack(null).remove(CreateNoteFragment.this).commit();
+            if (day.isChecked()) {
+                bundleSendData(MainActivity.DATA_DAY_NOTE, MainActivity.DATA_DAY_NOTE);
+                startMainFragment.startMainFragment();
 
-            } else if(longTerm.isChecked()){
-                bundleSendData("dataToLongTerm");
-                getFragmentManager().beginTransaction().addToBackStack(null).remove(CreateNoteFragment.this).commit();
+            } else if (longTerm.isChecked()) {
+                bundleSendData(MainActivity.DATA_LONG_TERM, MainActivity.DATA_LONG_TERM_TO_MAIN);
+                startMainFragment.startMainFragment();
             } else if (temporary.isChecked()) {
-                bundleSendData("dataToTemporary");
-                getFragmentManager().beginTransaction().addToBackStack(null).remove(CreateNoteFragment.this).commit();
+                bundleSendData(MainActivity.DATA_TEMPORARY, MainActivity.DATA_TEMPORARY_TO_MAIN);
+                startMainFragment.startMainFragment();
             } else {
                 Toast.makeText(getContext(), "Please, choose category", Toast.LENGTH_SHORT).show();
             }
 
-//            getFragmentManager().beginTransaction().addToBackStack(null).remove(CreateNoteFragment.this).commit();
-//            sendDataToDayNote.sendDataToDayNote(title.getText().toString(), description.getText().toString());
-
-
         });
     }
 
-    public void bundleSendData(String requestKey){
+    public void bundleSendData(String requestKey, String requestKey2) {
         Bundle result = new Bundle();
         result.putString("title", title.getText().toString());
         result.putString("description", description.getText().toString());
+        getParentFragmentManager().setFragmentResult(requestKey2, result);
         getParentFragmentManager().setFragmentResult(requestKey, result);
+    }
+
+    interface startMainFragment {
+        void startMainFragment();
     }
 
     interface sendData {
@@ -105,5 +106,9 @@ public class CreateNoteFragment extends Fragment {
 
     interface sendDataToTemporary {
         void sendDataToTemporary(String title, String description);
+    }
+
+    interface closeCreateNote {
+        void closeCreateNote();
     }
 }

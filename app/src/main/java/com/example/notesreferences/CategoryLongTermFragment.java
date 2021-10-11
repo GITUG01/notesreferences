@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
@@ -43,5 +45,20 @@ public class CategoryLongTermFragment extends Fragment {
         adapter.setData(noteRepo.notes());
 
         super.onViewCreated(view, savedInstanceState);
+
+
+        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_LONG_TERM, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String title = result.getString("title");
+                String description = result.getString("description");
+
+                noteRepo.addNote(new NoteEntity(title, description));
+            }
+        });
+    }
+
+    public void createNote(String title, String description){
+        noteRepo.addNote(new NoteEntity(title, description));
     }
 }

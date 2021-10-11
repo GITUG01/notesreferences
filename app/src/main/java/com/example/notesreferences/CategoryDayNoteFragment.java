@@ -58,8 +58,11 @@ public class CategoryDayNoteFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.setData(noteRepo.notes());
+
         super.onViewCreated(view, savedInstanceState);
-        getParentFragmentManager().setFragmentResultListener("dataToDayNote", this, new FragmentResultListener() {
+
+
+        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_DAY_NOTE, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 String title = result.getString("title");
@@ -70,7 +73,7 @@ public class CategoryDayNoteFragment extends Fragment {
         });
     }
 
-    public void createNoteDay(String title, String description){
+    public void createNoteDay(String title, String description) {
         noteRepo.addNote(new NoteEntity(title, description));
     }
 }

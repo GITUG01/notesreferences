@@ -2,7 +2,6 @@
 <LinearLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/hg"
     android:layout_width="match_parent"
@@ -11,89 +10,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:background="@color/background_menu">
-
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@color/background_menu"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/cogwheel_83806" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/app_title"
-            android:textSize="30sp" />
-
-    </androidx.appcompat.widget.Toolbar>
-
-<!--    <FrameLayout-->
-<!--        android:id="@+id/fragment_container"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/main_content"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="horizontal">-->
-
-
-            <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:background="@color/background_menu">-->
-
-            <!--                <ImageButton-->
-            <!--                    android:id="@+id/button3"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:background="@color/background_menu"-->
-            <!--                    android:padding="10dp"-->
-            <!--                    android:src="@android:drawable/btn_star"-->
-            <!--                    app:layout_constraintBottom_toTopOf="@+id/button2"-->
-            <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                    app:layout_constraintStart_toStartOf="parent"-->
-            <!--                    app:layout_constraintTop_toTopOf="parent"-->
-            <!--                    tools:ignore="MissingConstraints" />-->
-
-
-            <!--                <ImageButton-->
-            <!--                    android:id="@+id/button2"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_gravity="center"-->
-            <!--                    android:background="@color/background_menu"-->
-            <!--                    android:padding="10dp"-->
-            <!--                    android:src="@android:drawable/btn_star"-->
-            <!--                    android:text="@string/settings"-->
-            <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                    app:layout_constraintStart_toStartOf="parent"-->
-            <!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-            <!--                <ImageButton-->
-            <!--                    android:id="@+id/button"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:background="@color/background_menu"-->
-            <!--                    android:padding="10dp"-->
-            <!--                    android:src="@android:drawable/btn_star"-->
-            <!--                    android:text="@string/settings"-->
-            <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                    app:layout_constraintTop_toBottomOf="@+id/button2"-->
-            <!--                    tools:ignore="MissingConstraints" />-->
-
-            <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+        android:text="Recent notes"
+        android:layout_gravity="fill_vertical"
+        android:textSize="35sp"/>
 
             <LinearLayout
                 android:id="@+id/fff"
@@ -103,18 +25,20 @@
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/item_recycler"
+                    android:id="@+id/item_main_fragment_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" />
 
+
+
                 <FrameLayout
-                    android:id="@+id/note_fragment_container"
+                    android:id="@+id/note_main_fragment_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler"
+                        android:id="@+id/main_fragment_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
