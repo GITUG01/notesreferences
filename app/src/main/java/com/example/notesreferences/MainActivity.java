@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     public final static String DATA_LONG_TERM_TO_MAIN = "dataFromLongTermToMain";
     public final static String DATA_DAY_NOTE = "dataFromDayNote";
     public final static String DATA_DAY_NOTE_TO_MAIN = "dataFromDayNoteToMain";
+    public final static String DATA_TO_MAIN = "data";
 
     public final static String TABLE_NAME = "mytable";
     public List<CategoryEmpty> categories = new ArrayList<>();
-    RecyclerView recyclerView;
     RecyclerView recyclerItem;
     BottomNavigationView navigationView;
     NoteRepo noteRepo = new NoteRepoImpl();
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     private BDHelper bdHelper;
     private final Map<Integer, Fragment> fragments = new HashMap<>();
     private final List<Integer> notesList = new ArrayList<>();
+    private final MainActivityFragment mainActivityFragment = new MainActivityFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentMap.put(0, new MainActivityFragment());   //test variant
+        fragmentMap.put(0, mainActivityFragment);   //test variant
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -219,6 +220,14 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
                 .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
                 .commit();
     }
+
+//    @Override
+//    public void sendDataToMainFragment(String title, String description) {
+//        Bundle result = new Bundle();
+//        result.putString("title", title);
+//        result.putString("description", description));
+//        getParentFragmentManager().setFragmentResult(requestKey, result);
+//    }
 
 
     static class BDHelper extends SQLiteOpenHelper {

@@ -26,6 +26,7 @@ public class CreateNoteFragment extends Fragment {
     private sendData sendData;
     private sendDataToLongTerm sendDataToLongTerm;
     private startMainFragment startMainFragment;
+//    NoteViewHolderMainFragment noteViewHolderMainFragment = new NoteViewHolderMainFragment();
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -60,14 +61,17 @@ public class CreateNoteFragment extends Fragment {
         save.setOnClickListener(view1 -> {
 
             if (day.isChecked()) {
-                bundleSendData(MainActivity.DATA_DAY_NOTE, MainActivity.DATA_DAY_NOTE);
+                bundleSendData(MainActivity.DATA_DAY_NOTE);
+                bundleSendData(MainActivity.DATA_TO_MAIN);
                 startMainFragment.startMainFragment();
 
             } else if (longTerm.isChecked()) {
-                bundleSendData(MainActivity.DATA_LONG_TERM, MainActivity.DATA_LONG_TERM_TO_MAIN);
+                bundleSendData(MainActivity.DATA_LONG_TERM);
+                bundleSendData(MainActivity.DATA_TO_MAIN);
                 startMainFragment.startMainFragment();
             } else if (temporary.isChecked()) {
-                bundleSendData(MainActivity.DATA_TEMPORARY, MainActivity.DATA_TEMPORARY_TO_MAIN);
+                bundleSendData(MainActivity.DATA_TEMPORARY);
+                bundleSendData(MainActivity.DATA_TO_MAIN);
                 startMainFragment.startMainFragment();
             } else {
                 Toast.makeText(getContext(), "Please, choose category", Toast.LENGTH_SHORT).show();
@@ -76,16 +80,19 @@ public class CreateNoteFragment extends Fragment {
         });
     }
 
-    public void bundleSendData(String requestKey, String requestKey2) {
+    public void bundleSendData(String requestKey) {
         Bundle result = new Bundle();
         result.putString("title", title.getText().toString());
         result.putString("description", description.getText().toString());
-        getParentFragmentManager().setFragmentResult(requestKey2, result);
         getParentFragmentManager().setFragmentResult(requestKey, result);
     }
 
     interface startMainFragment {
         void startMainFragment();
+    }
+
+    interface sendDataToMainFragment {
+        void sendDataToMainFragment(String title, String description);
     }
 
     interface sendData {

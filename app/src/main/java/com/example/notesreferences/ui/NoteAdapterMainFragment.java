@@ -36,11 +36,14 @@ public class NoteAdapterMainFragment  extends RecyclerView.Adapter<NoteViewHolde
         return new NoteViewHolderMainFragment(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolderMainFragment holder, int position) {
         NoteEntity note = getItem(position);
         holder.titleTextView.setText(note.getTitle());
         holder.detailTextView.setText(note.getDetale());
+        holder.descriptionTextView.setText(note.getTitle());
     }
 
     @Override

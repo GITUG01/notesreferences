@@ -78,26 +78,13 @@ public class MainActivityFragment extends Fragment{
         fragments.put(3, new CategoryTemporaryFragment());
 
 
-//        LinearLayout layout = new LinearLayout(getContext());
-//        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        layout.setPadding(5, 5, 5, 5);
-//
-//        TextView tv = new TextView(getContext());
-//        tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        tv.setText("Some text");
-//
-//        layout.addView(tv);
-//        recyclerView.addView(layout);
-
-        noteRepo.addNote(new NoteEntity("title", "description"));
-
         super.onViewCreated(view, savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_DAY_NOTE_TO_MAIN, this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_TO_MAIN, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                String title = (String) result.get("title");
-                String description = (String) result.get("description");
+                String title = result.getString("title");
+                String description = result.getString("description");
 
                 noteRepo.addNote(new NoteEntity(title, description));
             }
