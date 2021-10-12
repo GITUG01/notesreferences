@@ -17,7 +17,4 @@ public class NoteViewHolderMainFragment extends RecyclerView.ViewHolder{
     public TextView detailTextView = itemView.findViewById(R.id.detail_text);
     public TextView descriptionTextView = itemView.findViewById(R.id.description_text);
 
-//    public void setDescriptionTextView(TextView descriptionTextView) {
-//        this.descriptionTextView = descriptionTextView;
-//    }
 }

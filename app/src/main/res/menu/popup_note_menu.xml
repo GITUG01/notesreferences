@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/del_note_menu"
+        android:title="@string/remove_note_popup_menu" />
+
+    <item
+        android:id="@+id/edit_note_menu"
+        android:title="@string/edit_note_popup_menu" />
+
+</menu>

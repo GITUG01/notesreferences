@@ -23,6 +23,7 @@ import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NoteAdapterMainFragment;
+import com.example.notesreferences.ui.NoteViewHolderMainFragment;
 import com.example.notesreferences.ui.NotesAdapter;
 
 import java.io.ObjectInputStream;
@@ -46,7 +47,6 @@ public class MainActivityFragment extends Fragment{
     private Map<Integer, Fragment> fragments = new HashMap<>();
     private List<Integer> notesList = new ArrayList<>();
     Map<Integer, Fragment> fragmentMap = new HashMap<>();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,8 +57,8 @@ public class MainActivityFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter1);
-        adapter1.setData(noteRepo.notes());
+        recyclerView.setAdapter(adapter);
+        adapter.setData(noteRepo.notes());
 
         fragmentMap.put(0, new CreateNoteFragment());
 

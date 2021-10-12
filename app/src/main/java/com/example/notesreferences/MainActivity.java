@@ -221,14 +221,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
                 .commit();
     }
 
-//    @Override
-//    public void sendDataToMainFragment(String title, String description) {
-//        Bundle result = new Bundle();
-//        result.putString("title", title);
-//        result.putString("description", description));
-//        getParentFragmentManager().setFragmentResult(requestKey, result);
-//    }
-
 
     static class BDHelper extends SQLiteOpenHelper {
 
