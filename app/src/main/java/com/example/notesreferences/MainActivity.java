@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.notesreferences.categories.domain.CategoryEmpty;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
 import com.example.notesreferences.categories.ui.CategoryViewHolder;
-import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
@@ -35,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startMainFragment, CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote, CreateNoteFragment.closeCreateNote {
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote, CreateNoteFragment.closeCreateNote {
     public final static String DATA_TEMPORARY = "dadaFromTemporary";
     public final static String DATA_TEMPORARY_TO_MAIN = "dadaFromTemporaryToMain";
     public final static String DATA_LONG_TERM = "dataFromLongTerm";
@@ -43,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     public final static String DATA_DAY_NOTE = "dataFromDayNote";
     public final static String DATA_DAY_NOTE_TO_MAIN = "dataFromDayNoteToMain";
     public final static String DATA_TO_MAIN = "data";
+    public static final String TITLE_KEY = "title";
+    public final static String DESCRIPTION_KEY = "description";
 
     public final static String TABLE_NAME = "mytable";
     public List<CategoryEmpty> categories = new ArrayList<>();
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     private final Map<Integer, Fragment> fragments = new HashMap<>();
     private final List<Integer> notesList = new ArrayList<>();
     private final MainActivityFragment mainActivityFragment = new MainActivityFragment();
+    private final CategoryDayNoteFragment categoryDayNoteFragment = new CategoryDayNoteFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         setSupportActionBar(toolbar);
 
         fragmentMap.put(0, mainActivityFragment);   //test variant
+        fragmentMap.put(1, categoryDayNoteFragment);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -90,11 +93,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
                 return false;
             }
         });
-
-//        recyclerView = findViewById(R.id.recycler);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(adapter);
-//        adapter.setData(noteRepo.notes());
 
         categories.add(new CategoryEmpty(1, "Day note"));
         categories.add(new CategoryEmpty(2, "Long-term"));
@@ -151,10 +149,11 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
     @Override
     public void sendData(String title, String description) {
-        notesList.add(noteRepo.addNote(new NoteEntity(title, description)));
-        noteRepo.addNote(new NoteEntity(title, description));
-        DataBase(title, description);
-        adapter.setData(noteRepo.notes());
+//        notesList.add(noteRepo.addNote(new NoteEntity(title, description)));
+//        noteRepo.addNote(new NoteEntity(title, description));
+//        DataBase(title, description);
+//        adapter.setData(noteRepo.notes());
+//        writeDataBase();
     }
 
     @Override
@@ -179,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
         bd = bdHelper.getWritableDatabase();
 
-        cv.put(NoteActivity.TITLE_KEY, title);
-        cv.put(NoteActivity.DESCRIPTION_KEY, description);
+        cv.put(TITLE_KEY, title);
+        cv.put(DESCRIPTION_KEY, description);
 
         bd.insert(TABLE_NAME, null, cv);
         Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
@@ -191,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
         if (c.moveToFirst()) {
             int columnID = c.getColumnIndex("id");
-            int columnTitle = c.getColumnIndex(NoteActivity.TITLE_KEY);
-            int columnDescription = c.getColumnIndex(NoteActivity.DESCRIPTION_KEY);
+            int columnTitle = c.getColumnIndex(TITLE_KEY);
+            int columnDescription = c.getColumnIndex(DESCRIPTION_KEY);
 
             do {
                 Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
@@ -214,10 +213,10 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     }
 
     @Override
-    public void startMainFragment() {
+    public void startCategoryDayNoteFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
+                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(1)))
                 .commit();
     }
 

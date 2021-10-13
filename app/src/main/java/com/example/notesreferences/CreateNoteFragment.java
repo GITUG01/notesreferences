@@ -25,7 +25,7 @@ public class CreateNoteFragment extends Fragment {
     private sendDataToDayNote sendDataToDayNote;
     private sendData sendData;
     private sendDataToLongTerm sendDataToLongTerm;
-    private startMainFragment startMainFragment;
+    private startCategoryDayNoteFragment startMainFragment;
 //    NoteViewHolderMainFragment noteViewHolderMainFragment = new NoteViewHolderMainFragment();
 
     @Override
@@ -33,8 +33,7 @@ public class CreateNoteFragment extends Fragment {
         super.onAttach(context);
         this.sendData = (sendData) context;
         this.sendDataToDayNote = (sendDataToDayNote) context;
-//        this.sendDataToLongTerm = (sendDataToLongTerm) context;
-        this.startMainFragment = (startMainFragment) context;
+        this.startMainFragment = (startCategoryDayNoteFragment) context;
     }
 
     @Override
@@ -61,18 +60,19 @@ public class CreateNoteFragment extends Fragment {
         save.setOnClickListener(view1 -> {
 
             if (day.isChecked()) {
+                sendData.sendData(title.getText().toString(), description.getText().toString());
                 bundleSendData(MainActivity.DATA_DAY_NOTE);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
-                startMainFragment.startMainFragment();
+                startMainFragment.startCategoryDayNoteFragment();
 
             } else if (longTerm.isChecked()) {
                 bundleSendData(MainActivity.DATA_LONG_TERM);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
-                startMainFragment.startMainFragment();
+                startMainFragment.startCategoryDayNoteFragment();
             } else if (temporary.isChecked()) {
                 bundleSendData(MainActivity.DATA_TEMPORARY);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
-                startMainFragment.startMainFragment();
+                startMainFragment.startCategoryDayNoteFragment();
             } else {
                 Toast.makeText(getContext(), "Please, choose category", Toast.LENGTH_SHORT).show();
             }
@@ -87,8 +87,8 @@ public class CreateNoteFragment extends Fragment {
         getParentFragmentManager().setFragmentResult(requestKey, result);
     }
 
-    interface startMainFragment {
-        void startMainFragment();
+    interface startCategoryDayNoteFragment {
+        void startCategoryDayNoteFragment();
     }
 
     interface sendDataToMainFragment {

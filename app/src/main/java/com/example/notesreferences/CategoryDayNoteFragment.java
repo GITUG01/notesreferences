@@ -1,6 +1,10 @@
 package com.example.notesreferences;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +14,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +41,9 @@ public class CategoryDayNoteFragment extends Fragment {
     private String title;
     private String description;
 
-//    public CategoryDayNoteFragment(String title, String description) {
-//        this.title = title;
-//        this.description = description;
-//    }
-
+    public final static String DAY_NOTE_TABLE_NAME = "DayNoteTable";
+    public static BDHelper bdHelper;
+    SQLiteDatabase bd;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,11 +72,67 @@ public class CategoryDayNoteFragment extends Fragment {
                 String description = result.getString("description");
 
                 noteRepo.addNote(new NoteEntity(title, description));
+                DataBase(title, description);
+//                writeDataBase();
             }
         });
     }
 
-    public void createNoteDay(String title, String description) {
-        noteRepo.addNote(new NoteEntity(title, description));
+//    public void createNoteDay(String title, String description) {
+//        noteRepo.addNote(new NoteEntity(title, description));
+//    }
+
+    static class BDHelper extends SQLiteOpenHelper {
+
+        public BDHelper(@Nullable Context context) {
+            super(context, DAY_NOTE_TABLE_NAME, null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            sqLiteDatabase.execSQL("create table " + DAY_NOTE_TABLE_NAME + " ("
+                    + "id integer primary key autoincrement,"
+                    + "description text,"
+                    + "title text" + ");");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+        }
+    }
+
+    public void DataBase(String title, String description) {
+        bdHelper = new BDHelper(getContext());
+        ContentValues cv = new ContentValues();
+
+        bd = bdHelper.getWritableDatabase();
+
+        cv.put(MainActivity.TITLE_KEY, title);
+        cv.put(MainActivity.DESCRIPTION_KEY, description);
+
+        bd.insert(DAY_NOTE_TABLE_NAME, null, cv);
+        Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
+    }
+
+    public void writeDataBase() {
+        Cursor c = bd.query(DAY_NOTE_TABLE_NAME, null, null, null, null, null, null);
+
+        if (c.moveToFirst()) {
+            int columnID = c.getColumnIndex("id");
+            int columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY);
+            int columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY);
+
+            do {
+                Log.d("@@@ mylogs", "Note № " + c.getInt(columnID) +
+                        " Title: " + c.getString(columnTitle) +
+                        " Description: " + c.getString(columnDescription));
+            } while (c.moveToNext());
+
+        } else {
+            Log.d("@@@ mylogs", "That's all");
+
+        }
+        c.close();
     }
 }
