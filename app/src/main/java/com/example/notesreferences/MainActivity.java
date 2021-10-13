@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,6 @@ import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote, CreateNoteFragment.closeCreateNote {
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startTemporaryFragment,CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote, CreateNoteFragment.closeCreateNote {
     public final static String DATA_TEMPORARY = "dadaFromTemporary";
     public final static String DATA_TEMPORARY_TO_MAIN = "dadaFromTemporaryToMain";
     public final static String DATA_LONG_TERM = "dataFromLongTerm";
@@ -46,6 +46,14 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     public final static String DESCRIPTION_KEY = "description";
 
     public final static String TABLE_NAME = "mytable";
+    private final NotesAdapter adapter = new NotesAdapter();
+    private final Map<Integer, Fragment> fragments = new HashMap<>();
+    private final List<Integer> notesList = new ArrayList<>();
+    private final MainActivityFragment mainActivityFragment = new MainActivityFragment();
+    private final CategoryDayNoteFragment categoryDayNoteFragment = new CategoryDayNoteFragment();
+    private final CategoryLongTermFragment categoryLongTermFragment = new CategoryLongTermFragment();
+    private final CategoryTemporaryFragment categoryTemporaryFragment = new CategoryTemporaryFragment();
+    private final CategoryProductListFragment categoryProductListFragment = new CategoryProductListFragment();
     public List<CategoryEmpty> categories = new ArrayList<>();
     RecyclerView recyclerItem;
     BottomNavigationView navigationView;
@@ -53,12 +61,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     SQLiteDatabase bd;
     Map<Integer, Fragment> fragmentMap = new HashMap<>();
     private Toolbar toolbar;
-    private final NotesAdapter adapter = new NotesAdapter();
     private BDHelper bdHelper;
-    private final Map<Integer, Fragment> fragments = new HashMap<>();
-    private final List<Integer> notesList = new ArrayList<>();
-    private final MainActivityFragment mainActivityFragment = new MainActivityFragment();
-    private final CategoryDayNoteFragment categoryDayNoteFragment = new CategoryDayNoteFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +71,11 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentMap.put(0, mainActivityFragment);   //test variant
+        fragmentMap.put(0, mainActivityFragment);
         fragmentMap.put(1, categoryDayNoteFragment);
+        fragmentMap.put(2, categoryLongTermFragment);
+        fragmentMap.put(3, categoryTemporaryFragment);
+        fragmentMap.put(4, categoryProductListFragment);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -78,20 +84,16 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
 
         navigationView = findViewById(R.id.navigation_menu);
-        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.home:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
-                                .addToBackStack(null)
-                                .commit();
-//                        setContentView(R.layout.activity_main);
-                }
-                return false;
+        navigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
+                            .addToBackStack(null)
+                            .commit();
             }
+            return false;
         });
 
         categories.add(new CategoryEmpty(1, "Day note"));
@@ -214,12 +216,25 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
     @Override
     public void startCategoryDayNoteFragment() {
+        replaceFragment(R.id.fragment_container, 1);
+    }
+
+    @Override
+    public void startCategoryLongTermFragment() {
+        replaceFragment(R.id.fragment_container, 2);
+    }
+
+    private void replaceFragment(@IdRes int containerViewId, int fragmentContainerPosition) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(1)))
+                .replace(containerViewId, Objects.requireNonNull(fragmentMap.get(fragmentContainerPosition)))
                 .commit();
     }
 
+    @Override
+    public void startTemporaryFragment() {
+        replaceFragment(R.id.fragment_container, 3);
+    }
 
     static class BDHelper extends SQLiteOpenHelper {
 

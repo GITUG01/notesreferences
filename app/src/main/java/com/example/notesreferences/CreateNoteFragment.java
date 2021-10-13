@@ -25,7 +25,9 @@ public class CreateNoteFragment extends Fragment {
     private sendDataToDayNote sendDataToDayNote;
     private sendData sendData;
     private sendDataToLongTerm sendDataToLongTerm;
-    private startCategoryDayNoteFragment startMainFragment;
+    private startCategoryDayNoteFragment startCategoryDayNoteFragment;
+    private startCategoryLongTermFragment startCategoryLongTermFragment;
+    private startTemporaryFragment startTemporaryFragment;
 //    NoteViewHolderMainFragment noteViewHolderMainFragment = new NoteViewHolderMainFragment();
 
     @Override
@@ -33,7 +35,9 @@ public class CreateNoteFragment extends Fragment {
         super.onAttach(context);
         this.sendData = (sendData) context;
         this.sendDataToDayNote = (sendDataToDayNote) context;
-        this.startMainFragment = (startCategoryDayNoteFragment) context;
+        this.startCategoryDayNoteFragment = (startCategoryDayNoteFragment) context;
+        this.startCategoryLongTermFragment = (startCategoryLongTermFragment)context;
+        this.startTemporaryFragment = (startTemporaryFragment)context;
     }
 
     @Override
@@ -63,16 +67,16 @@ public class CreateNoteFragment extends Fragment {
                 sendData.sendData(title.getText().toString(), description.getText().toString());
                 bundleSendData(MainActivity.DATA_DAY_NOTE);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
-                startMainFragment.startCategoryDayNoteFragment();
+                startCategoryDayNoteFragment.startCategoryDayNoteFragment();
 
             } else if (longTerm.isChecked()) {
                 bundleSendData(MainActivity.DATA_LONG_TERM);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
-                startMainFragment.startCategoryDayNoteFragment();
+                startCategoryLongTermFragment.startCategoryLongTermFragment();
             } else if (temporary.isChecked()) {
                 bundleSendData(MainActivity.DATA_TEMPORARY);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
-                startMainFragment.startCategoryDayNoteFragment();
+                startTemporaryFragment.startTemporaryFragment();
             } else {
                 Toast.makeText(getContext(), "Please, choose category", Toast.LENGTH_SHORT).show();
             }
@@ -91,8 +95,12 @@ public class CreateNoteFragment extends Fragment {
         void startCategoryDayNoteFragment();
     }
 
-    interface sendDataToMainFragment {
-        void sendDataToMainFragment(String title, String description);
+    interface startCategoryLongTermFragment {
+        void startCategoryLongTermFragment();
+    }
+
+    interface startTemporaryFragment {
+        void startTemporaryFragment();
     }
 
     interface sendData {
@@ -105,14 +113,6 @@ public class CreateNoteFragment extends Fragment {
 
     interface sendDataToLongTerm {
         void sendDataToLongTerm(String title, String description);
-    }
-
-    interface sendDataToProductList {
-        void sendDataToProductList(String title, String description);
-    }
-
-    interface sendDataToTemporary {
-        void sendDataToTemporary(String title, String description);
     }
 
     interface closeCreateNote {
