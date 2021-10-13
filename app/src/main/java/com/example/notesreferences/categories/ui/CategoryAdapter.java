@@ -4,24 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notesreferences.R;
-import com.example.notesreferences.categories.domain.CategoryEmpty;
-import com.example.notesreferences.domain.NoteEntity;
-import com.example.notesreferences.ui.NotesAdapter;
+import com.example.notesreferences.categories.domain.CategoryEntity;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     Context context;
-    List<CategoryEmpty> categoryData;
+    List<CategoryEntity> categoryData;
     private CategoryViewHolder.OnCategoryListener onCategoryListener;
 
-    public CategoryAdapter(Context context, List<CategoryEmpty> categoryEmptyList, CategoryViewHolder.OnCategoryListener onCategoryListener) {
+    public CategoryAdapter(Context context, List<CategoryEntity> categoryEmptyList, CategoryViewHolder.OnCategoryListener onCategoryListener) {
         this.context = context;
         this.categoryData = categoryEmptyList;
         this.onCategoryListener = onCategoryListener;
@@ -37,12 +34,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        CategoryEmpty category = getItem(position);
+        CategoryEntity category = getItem(position);
         holder.item.setText(category.getTitle());
 
     }
 
-    private CategoryEmpty getItem(int position) {
+    private CategoryEntity getItem(int position) {
         return categoryData.get(position);
     }
 

@@ -22,19 +22,13 @@ public class CreateNoteFragment extends Fragment {
     CheckBox day;
     CheckBox longTerm;
     CheckBox temporary;
-    private sendDataToDayNote sendDataToDayNote;
-    private sendData sendData;
-    private sendDataToLongTerm sendDataToLongTerm;
     private startCategoryDayNoteFragment startCategoryDayNoteFragment;
     private startCategoryLongTermFragment startCategoryLongTermFragment;
     private startTemporaryFragment startTemporaryFragment;
-//    NoteViewHolderMainFragment noteViewHolderMainFragment = new NoteViewHolderMainFragment();
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.sendData = (sendData) context;
-        this.sendDataToDayNote = (sendDataToDayNote) context;
         this.startCategoryDayNoteFragment = (startCategoryDayNoteFragment) context;
         this.startCategoryLongTermFragment = (startCategoryLongTermFragment)context;
         this.startTemporaryFragment = (startTemporaryFragment)context;
@@ -64,7 +58,6 @@ public class CreateNoteFragment extends Fragment {
         save.setOnClickListener(view1 -> {
 
             if (day.isChecked()) {
-                sendData.sendData(title.getText().toString(), description.getText().toString());
                 bundleSendData(MainActivity.DATA_DAY_NOTE);
                 bundleSendData(MainActivity.DATA_TO_MAIN);
                 startCategoryDayNoteFragment.startCategoryDayNoteFragment();
@@ -101,21 +94,5 @@ public class CreateNoteFragment extends Fragment {
 
     interface startTemporaryFragment {
         void startTemporaryFragment();
-    }
-
-    interface sendData {
-        void sendData(String title, String description);
-    }
-
-    interface sendDataToDayNote {
-        void sendDataToDayNote(String title, String description);
-    }
-
-    interface sendDataToLongTerm {
-        void sendDataToLongTerm(String title, String description);
-    }
-
-    interface closeCreateNote {
-        void closeCreateNote();
     }
 }

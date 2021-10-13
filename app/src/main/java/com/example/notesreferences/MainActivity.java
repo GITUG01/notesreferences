@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.notesreferences.categories.domain.CategoryEmpty;
+import com.example.notesreferences.categories.domain.CategoryEntity;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
 import com.example.notesreferences.categories.ui.CategoryViewHolder;
 import com.example.notesreferences.domain.NoteRepo;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startTemporaryFragment,CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CreateNoteFragment.sendData, CategoryViewHolder.OnCategoryListener, CreateNoteFragment.sendDataToDayNote, CreateNoteFragment.closeCreateNote {
+public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startTemporaryFragment, CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CategoryViewHolder.OnCategoryListener {
     public final static String DATA_TEMPORARY = "dadaFromTemporary";
     public final static String DATA_TEMPORARY_TO_MAIN = "dadaFromTemporaryToMain";
     public final static String DATA_LONG_TERM = "dataFromLongTerm";
@@ -49,12 +49,14 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     private final NotesAdapter adapter = new NotesAdapter();
     private final Map<Integer, Fragment> fragments = new HashMap<>();
     private final List<Integer> notesList = new ArrayList<>();
+
     private final MainActivityFragment mainActivityFragment = new MainActivityFragment();
     private final CategoryDayNoteFragment categoryDayNoteFragment = new CategoryDayNoteFragment();
     private final CategoryLongTermFragment categoryLongTermFragment = new CategoryLongTermFragment();
     private final CategoryTemporaryFragment categoryTemporaryFragment = new CategoryTemporaryFragment();
     private final CategoryProductListFragment categoryProductListFragment = new CategoryProductListFragment();
-    public List<CategoryEmpty> categories = new ArrayList<>();
+
+    public List<CategoryEntity> categories = new ArrayList<>();
     RecyclerView recyclerItem;
     BottomNavigationView navigationView;
     NoteRepo noteRepo = new NoteRepoImpl();
@@ -96,18 +98,18 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
             return false;
         });
 
-        categories.add(new CategoryEmpty(1, "Day note"));
-        categories.add(new CategoryEmpty(2, "Long-term"));
-        categories.add(new CategoryEmpty(3, "Temporary"));
-        categories.add(new CategoryEmpty(3, "Product list"));
-        categories.add(new CategoryEmpty(3, "And something else"));
+        categories.add(new CategoryEntity(1, "Day note"));
+        categories.add(new CategoryEntity(2, "Long-term"));
+        categories.add(new CategoryEntity(3, "Temporary"));
+        categories.add(new CategoryEntity(3, "Product list"));
+        categories.add(new CategoryEntity(3, "And something else"));
 
         setCategoryAdapter(categories);
 
-        fragments.put(0, new CategoryDayNoteFragment());
-        fragments.put(1, new CategoryLongTermFragment());
-        fragments.put(2, new CategoryProductListFragment());
-        fragments.put(3, new CategoryTemporaryFragment());
+        fragments.put(0, fragmentMap.get(1));
+        fragments.put(1, fragmentMap.get(2));
+        fragments.put(2, fragmentMap.get(4));
+        fragments.put(3, fragmentMap.get(3));
 
     }
 
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         return super.onOptionsItemSelected(item);
     }
 
-    private void setCategoryAdapter(List<CategoryEmpty> categoryEmptyList) {
+    private void setCategoryAdapter(List<CategoryEntity> categoryEmptyList) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
 
         recyclerItem = findViewById(R.id.item_recycler);
@@ -150,20 +152,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     }
 
     @Override
-    public void sendData(String title, String description) {
-//        notesList.add(noteRepo.addNote(new NoteEntity(title, description)));
-//        noteRepo.addNote(new NoteEntity(title, description));
-//        DataBase(title, description);
-//        adapter.setData(noteRepo.notes());
-//        writeDataBase();
-    }
-
-    @Override
-    public void sendDataToDayNote(String title, String description) {
-
-    }
-
-    @Override
     public void onCategoryClick(int position) {
         categories.get(position);
         getSupportFragmentManager()
@@ -172,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
                 .addToBackStack(null)
                 .commit();
     }
-
 
     public void DataBase(String title, String description) {
         bdHelper = new BDHelper(this);
@@ -206,12 +193,6 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
         }
         c.close();
-    }
-
-    @Override
-    public void closeCreateNote() {
-        getFragmentManager().popBackStack();
-
     }
 
     @Override

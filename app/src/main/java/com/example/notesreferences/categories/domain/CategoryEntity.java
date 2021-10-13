@@ -1,11 +1,11 @@
 package com.example.notesreferences.categories.domain;
 
-public class CategoryEmpty {
+public class CategoryEntity {
 
     int id;
     String title;
 
-    public CategoryEmpty(int id, String title) {
+    public CategoryEntity(int id, String title) {
         this.id = id;
         this.title = title;
     }

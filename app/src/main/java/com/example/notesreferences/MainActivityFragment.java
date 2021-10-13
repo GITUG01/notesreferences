@@ -13,25 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.example.notesreferences.categories.domain.CategoryEmpty;
-import com.example.notesreferences.categories.ui.CategoryAdapter;
-import com.example.notesreferences.categories.ui.CategoryViewHolder;
+import com.example.notesreferences.categories.domain.CategoryEntity;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NoteAdapterMainFragment;
-import com.example.notesreferences.ui.NoteViewHolderMainFragment;
 import com.example.notesreferences.ui.NotesAdapter;
 
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivityFragment extends Fragment{
 
@@ -43,7 +36,7 @@ public class MainActivityFragment extends Fragment{
     public final static String TABLE_NAME = "mytable";
     private MainActivity.BDHelper bdHelper;
     SQLiteDatabase bd;
-    public List<CategoryEmpty> categories = new ArrayList<>();
+    public List<CategoryEntity> categories = new ArrayList<>();
     private Map<Integer, Fragment> fragments = new HashMap<>();
     private List<Integer> notesList = new ArrayList<>();
     Map<Integer, Fragment> fragmentMap = new HashMap<>();
@@ -64,11 +57,11 @@ public class MainActivityFragment extends Fragment{
 
 
 
-        categories.add(new CategoryEmpty(1, "Day note"));
-        categories.add(new CategoryEmpty(2, "Long-term"));
-        categories.add(new CategoryEmpty(3, "Temporary"));
-        categories.add(new CategoryEmpty(3, "Product list"));
-        categories.add(new CategoryEmpty(3, "And something else"));
+        categories.add(new CategoryEntity(1, "Day note"));
+        categories.add(new CategoryEntity(2, "Long-term"));
+        categories.add(new CategoryEntity(3, "Temporary"));
+        categories.add(new CategoryEntity(3, "Product list"));
+        categories.add(new CategoryEntity(3, "And something else"));
 
         setCategoryAdapter(categories);
 
@@ -91,7 +84,7 @@ public class MainActivityFragment extends Fragment{
         });
     }
 
-    private void setCategoryAdapter(List<CategoryEmpty> categoryEmptyList) {
+    private void setCategoryAdapter(List<CategoryEntity> categoryEmptyList) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
 
