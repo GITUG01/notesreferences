@@ -89,11 +89,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
         navigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_container, Objects.requireNonNull(fragmentMap.get(0)))
-                            .addToBackStack(null)
-                            .commit();
+                    replaceFragment(R.id.fragment_container, 0);
             }
             return false;
         });
@@ -108,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
 
         fragments.put(0, fragmentMap.get(1));
         fragments.put(1, fragmentMap.get(2));
-        fragments.put(2, fragmentMap.get(4));
-        fragments.put(3, fragmentMap.get(3));
+        fragments.put(2, fragmentMap.get(3));
+        fragments.put(3, fragmentMap.get(4));
 
     }
 

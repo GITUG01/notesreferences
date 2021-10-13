@@ -15,7 +15,8 @@
     <FrameLayout
         android:id="@+id/fragment_container_product_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
 
         <LinearLayout
@@ -89,26 +90,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="7dp"
-                    android:text="add" />
+                    android:text="@string/btn_add_poduct_list" />
 
                 <CheckBox
                     android:id="@+id/checkBox"
                     android:layout_width="match_parent"
-                    android:layout_margin="3dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
                     android:text="CheckBox" />
-
-                <!--                <FrameLayout-->
-                <!--                    android:id="@+id/note_fragment_container_product_list"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content">-->
-
-                <!--                    <androidx.recyclerview.widget.RecyclerView-->
-                <!--                        android:id="@+id/recycler_product_list"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="match_parent" />-->
-
-                <!--                </FrameLayout>-->
 
             </LinearLayout>
 

@@ -16,4 +16,7 @@
     <string name="settings_menu">settings</string>
     <string name="edit_note_popup_menu">Edit</string>
     <string name="remove_note_popup_menu">Remove</string>
+    <string name="category_day_note_title">Day note</string>
+    <string name="btn_add_poduct_list">add</string>
+    <string name="category_temporary_title">Temporary</string>
 </resources>
