@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +23,10 @@ import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
+import com.example.notesreferences.ui.NotesViewHolder;
+import com.example.notesreferences.ui.SelectListener;
 
-public class CategoryDayNoteFragment extends Fragment {
+public class CategoryDayNoteFragment extends Fragment implements SelectListener{
 
 
     public final static String DAY_NOTE_TABLE_NAME = "DayNoteTable";
@@ -31,7 +34,7 @@ public class CategoryDayNoteFragment extends Fragment {
     public NoteRepo noteRepo = new NoteRepoImpl();
     RecyclerView recyclerView;
     SQLiteDatabase bd;
-    private NotesAdapter adapter = new NotesAdapter();
+    private NotesAdapter adapter = new NotesAdapter(this);
     private String title;
     private String description;
 
@@ -129,6 +132,11 @@ public class CategoryDayNoteFragment extends Fragment {
             Log.d("@@@ mylogs", "That's all");
         }
         c.close();
+    }
+
+    @Override
+    public void onItemClicked(NoteEntity noteEntity) {
+        Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     static class BDHelper extends SQLiteOpenHelper {

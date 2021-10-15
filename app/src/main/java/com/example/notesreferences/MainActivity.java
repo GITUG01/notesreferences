@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
@@ -23,9 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.notesreferences.categories.domain.CategoryEntity;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
 import com.example.notesreferences.categories.ui.CategoryViewHolder;
+import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
+import com.example.notesreferences.ui.SelectListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements CreateNoteFragment.startTemporaryFragment, CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CategoryViewHolder.OnCategoryListener {
+public class MainActivity extends AppCompatActivity implements SelectListener, CategoryProductListFragment.hideKeyboard, CreateNoteFragment.hideKeyboardCreateNote, CreateNoteFragment.startTemporaryFragment, CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CategoryViewHolder.OnCategoryListener {
     public final static String DATA_TEMPORARY = "dadaFromTemporary";
     public final static String DATA_TEMPORARY_TO_MAIN = "dadaFromTemporaryToMain";
     public final static String DATA_LONG_TERM = "dataFromLongTerm";
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     public final static String DESCRIPTION_KEY = "description";
 
     public final static String TABLE_NAME = "mytable";
-    private final NotesAdapter adapter = new NotesAdapter();
+    private final NotesAdapter adapter = new NotesAdapter(this);
     private final Map<Integer, Fragment> fragments = new HashMap<>();
     private final List<Integer> notesList = new ArrayList<>();
 
@@ -211,6 +214,24 @@ public class MainActivity extends AppCompatActivity implements CreateNoteFragmen
     @Override
     public void startTemporaryFragment() {
         replaceFragment(R.id.fragment_container, 3);
+    }
+
+
+    @Override
+    public void hideKeyboardCreateNote() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @Override
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @Override
+    public void onItemClicked(NoteEntity noteEntity) {
+        Toast.makeText(this, noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     static class BDHelper extends SQLiteOpenHelper {

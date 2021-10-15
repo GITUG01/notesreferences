@@ -74,6 +74,7 @@
             <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <LinearLayout
+                android:id="@+id/product_list_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -85,7 +86,21 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" />
 
+                <EditText
+                    android:id="@+id/product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="17dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="17dp"
+                    android:gravity=""
+                    android:maxLength="22"
+                    android:paddingLeft="7dp"
+                    android:ems="10"
+                    android:hint="product" />
+
                 <Button
+                    android:id="@+id/add_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
