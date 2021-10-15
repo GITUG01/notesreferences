@@ -15,9 +15,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="7dp"
+        android:layout_margin="5dp"
         android:text="@string/category_day_note_title"
-        android:textSize="35sp" />
+        android:textSize="25sp" />
 
     <FrameLayout
         android:id="@+id/fragment_container_day_note"

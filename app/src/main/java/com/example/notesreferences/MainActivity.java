@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
@@ -24,6 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.notesreferences.categories.domain.CategoryEntity;
 import com.example.notesreferences.categories.ui.CategoryAdapter;
 import com.example.notesreferences.categories.ui.CategoryViewHolder;
+import com.example.notesreferences.categoryFragments.CategoryDayNoteFragment;
+import com.example.notesreferences.categoryFragments.CategoryLongTermFragment;
+import com.example.notesreferences.categoryFragments.CategoryProductListFragment;
+import com.example.notesreferences.categoryFragments.CategoryTemporaryFragment;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements SelectListener, C
     public final static String DATA_TO_MAIN = "data";
     public static final String TITLE_KEY = "title";
     public final static String DESCRIPTION_KEY = "description";
+    public final static String DATA_T0_EDIT = "dataToEdit";
 
     public final static String TABLE_NAME = "mytable";
     private final NotesAdapter adapter = new NotesAdapter(this);

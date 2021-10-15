@@ -1,4 +1,4 @@
-package com.example.notesreferences;
+package com.example.notesreferences.categoryFragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.notesreferences.R;
 
 public class CategoryProductListFragment extends Fragment {
 
@@ -61,7 +63,7 @@ public class CategoryProductListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    interface hideKeyboard {
+    public interface hideKeyboard {
         void hideKeyboard();
     }
 }

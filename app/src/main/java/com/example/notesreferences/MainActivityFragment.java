@@ -16,6 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.notesreferences.categories.domain.CategoryEntity;
+import com.example.notesreferences.categoryFragments.CategoryDayNoteFragment;
+import com.example.notesreferences.categoryFragments.CategoryLongTermFragment;
+import com.example.notesreferences.categoryFragments.CategoryProductListFragment;
+import com.example.notesreferences.categoryFragments.CategoryTemporaryFragment;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
