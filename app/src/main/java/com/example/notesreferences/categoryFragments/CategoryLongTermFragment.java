@@ -1,4 +1,4 @@
-package com.example.notesreferences;
+package com.example.notesreferences.categoryFragments;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,22 +19,23 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notesreferences.EditNoteFragment;
+import com.example.notesreferences.MainActivity;
+import com.example.notesreferences.R;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
+import com.example.notesreferences.ui.SelectListener;
 
-public class CategoryDayNoteFragment extends Fragment {
+public class CategoryLongTermFragment extends Fragment implements SelectListener{
 
-
-    public final static String DAY_NOTE_TABLE_NAME = "DayNoteTable";
+    public final static String LONG_TERM_TABLE_NAME = "LongTermTable";
     public static BDHelper bdHelper;
     public NoteRepo noteRepo = new NoteRepoImpl();
     RecyclerView recyclerView;
     SQLiteDatabase bd;
-    private NotesAdapter adapter = new NotesAdapter();
-    private String title;
-    private String description;
+    private NotesAdapter adapter = new NotesAdapter(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,21 +44,24 @@ public class CategoryDayNoteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_category_day_note, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_category_long_term, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = view.findViewById(R.id.recycler_day_note);
+
+        recyclerView = view.findViewById(R.id.recycler_long_term);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.setData(noteRepo.notes());
 
+
         super.onViewCreated(view, savedInstanceState);
 
 
-        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_DAY_NOTE, this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_LONG_TERM, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 String title = result.getString("title");
@@ -79,42 +84,15 @@ public class CategoryDayNoteFragment extends Fragment {
         cv.put(MainActivity.TITLE_KEY, title);
         cv.put(MainActivity.DESCRIPTION_KEY, description);
 
-        bd.insert(DAY_NOTE_TABLE_NAME, null, cv);
-
-//      int clearCount = bd.delete(DAY_NOTE_TABLE_NAME, null, null);
-//      Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
-
+        bd.insert(LONG_TERM_TABLE_NAME, null, cv);
         Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
     }
 
-    public void writeDataBase() {
+    public void readDataBase(){
         bdHelper = new BDHelper(getContext());
         bd = bdHelper.getReadableDatabase();
 
-        Cursor c = bd.query(DAY_NOTE_TABLE_NAME, null, null, null, null, null, null);
-
-        if (c.moveToFirst()) {
-            int columnID = c.getColumnIndex("id");
-            int columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY);
-            int columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY);
-
-            do {
-                Log.d("@@@ mylogs", "Table: " + DAY_NOTE_TABLE_NAME + "Note № " + c.getInt(columnID) +
-                        " Title: " + c.getString(columnTitle) +
-                        " Description: " + c.getString(columnDescription));
-            } while (c.moveToNext());
-
-        } else {
-            Log.d("@@@ mylogs", "That's all");
-        }
-        c.close();
-    }
-
-    public void readDataBase() {
-        bdHelper = new BDHelper(getContext());
-        bd = bdHelper.getReadableDatabase();
-
-        Cursor c = bd.query(DAY_NOTE_TABLE_NAME, null, null, null, null, null, null);
+        Cursor c = bd.query(LONG_TERM_TABLE_NAME, null, null, null, null, null, null);
 
         if (c.moveToFirst()) {
             int columnID = c.getColumnIndex("id");
@@ -131,15 +109,56 @@ public class CategoryDayNoteFragment extends Fragment {
         c.close();
     }
 
+
+//    int clearCount = db.delete("mytable", null, null);
+//      Log.d(LOG_TAG, "deleted rows count = " + clearCount);
+
+
+    public void writeDataBase() {
+        Cursor c = bd.query(LONG_TERM_TABLE_NAME, null, null, null, null, null, null);
+
+        if (c.moveToFirst()) {
+            int columnID = c.getColumnIndex("id");
+            int columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY);
+            int columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY);
+
+            do {
+                Log.d("@@@ mylogs", "Table: " +LONG_TERM_TABLE_NAME + "Note № " + c.getInt(columnID) +
+                        " Title: " + c.getString(columnTitle) +
+                        " Description: " + c.getString(columnDescription));
+            } while (c.moveToNext());
+
+        } else {
+            Log.d("@@@ mylogs", "That's all");
+        }
+        c.close();
+    }
+
+    @Override
+    public void onItemClicked(NoteEntity noteEntity) {
+        Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new EditNoteFragment())
+                .addToBackStack(null)
+                .commit();
+
+        Bundle result = new Bundle();
+        result.putString("title", noteEntity.getTitle());
+        result.putString("description", noteEntity.getDetale());
+//        result.putSerializable("gg", (Serializable) noteEntity);
+        getParentFragmentManager().setFragmentResult(MainActivity.DATA_T0_EDIT, result);
+    }
+
     static class BDHelper extends SQLiteOpenHelper {
 
         public BDHelper(@Nullable Context context) {
-            super(context, DAY_NOTE_TABLE_NAME, null, 1);
+            super(context, LONG_TERM_TABLE_NAME, null, 1);
         }
 
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.execSQL("create table " + DAY_NOTE_TABLE_NAME + " ("
+            sqLiteDatabase.execSQL("create table " + LONG_TERM_TABLE_NAME + " ("
                     + "id integer primary key autoincrement,"
                     + "description text,"
                     + "title text" + ");");

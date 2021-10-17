@@ -1,7 +1,6 @@
 package com.example.notesreferences.ui;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +8,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.notesreferences.CreateNoteFragment;
-import com.example.notesreferences.MainActivity;
 import com.example.notesreferences.R;
 import com.example.notesreferences.domain.NoteEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private List<NoteEntity> data;
+    private SelectListener selectListener;
+
+    public NotesAdapter(SelectListener selectListener) {
+        this.selectListener = selectListener;
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<NoteEntity> data){
@@ -40,6 +41,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
         holder.titleTextView.setText(note.getTitle());
         holder.detailTextView.setText(note.getDetale());
 
+        holder.cardView.setOnClickListener(view -> {
+            selectListener.onItemClicked(getItem(position));
+        });
     }
 
     private NoteEntity getItem(int position){

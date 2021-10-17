@@ -13,26 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.notesreferences.categories.domain.CategoryEntity;
+import com.example.notesreferences.categoryFragments.CategoryDayNoteFragment;
+import com.example.notesreferences.categoryFragments.CategoryLongTermFragment;
+import com.example.notesreferences.categoryFragments.CategoryProductListFragment;
+import com.example.notesreferences.categoryFragments.CategoryTemporaryFragment;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
-import com.example.notesreferences.ui.NoteAdapterMainFragment;
 import com.example.notesreferences.ui.NotesAdapter;
+import com.example.notesreferences.ui.SelectListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivityFragment extends Fragment{
+public class MainActivityFragment extends Fragment implements SelectListener {
 
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
     NoteRepo noteRepo = new NoteRepoImpl();
-    private NotesAdapter adapter = new NotesAdapter();
-    private NoteAdapterMainFragment adapter1 = new NoteAdapterMainFragment();
+    private NotesAdapter adapter = new NotesAdapter(this);
+//    private NoteAdapterMainFragment adapter1 = new NoteAdapterMainFragment();
     public final static String TABLE_NAME = "mytable";
     private MainActivity.BDHelper bdHelper;
     SQLiteDatabase bd;
@@ -88,5 +93,10 @@ public class MainActivityFragment extends Fragment{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
 
+    }
+
+    @Override
+    public void onItemClicked(NoteEntity noteEntity) {
+        Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -7,6 +7,7 @@
     android:padding="17dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/note_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp"
