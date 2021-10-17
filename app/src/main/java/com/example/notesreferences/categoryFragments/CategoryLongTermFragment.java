@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notesreferences.EditNoteFragment;
 import com.example.notesreferences.MainActivity;
 import com.example.notesreferences.R;
 import com.example.notesreferences.domain.NoteEntity;
@@ -136,6 +137,17 @@ public class CategoryLongTermFragment extends Fragment implements SelectListener
     @Override
     public void onItemClicked(NoteEntity noteEntity) {
         Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new EditNoteFragment())
+                .addToBackStack(null)
+                .commit();
+
+        Bundle result = new Bundle();
+        result.putString("title", noteEntity.getTitle());
+        result.putString("description", noteEntity.getDetale());
+//        result.putSerializable("gg", (Serializable) noteEntity);
+        getParentFragmentManager().setFragmentResult(MainActivity.DATA_T0_EDIT, result);
     }
 
     static class BDHelper extends SQLiteOpenHelper {

@@ -23,7 +23,6 @@ import com.example.notesreferences.categoryFragments.CategoryTemporaryFragment;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
-import com.example.notesreferences.ui.NoteAdapterMainFragment;
 import com.example.notesreferences.ui.NotesAdapter;
 import com.example.notesreferences.ui.SelectListener;
 
@@ -38,7 +37,7 @@ public class MainActivityFragment extends Fragment implements SelectListener {
     RecyclerView recyclerItem;
     NoteRepo noteRepo = new NoteRepoImpl();
     private NotesAdapter adapter = new NotesAdapter(this);
-    private NoteAdapterMainFragment adapter1 = new NoteAdapterMainFragment();
+//    private NoteAdapterMainFragment adapter1 = new NoteAdapterMainFragment();
     public final static String TABLE_NAME = "mytable";
     private MainActivity.BDHelper bdHelper;
     SQLiteDatabase bd;

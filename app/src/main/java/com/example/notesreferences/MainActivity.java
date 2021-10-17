@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -116,6 +117,25 @@ public class MainActivity extends AppCompatActivity implements SelectListener, C
         fragments.put(2, fragmentMap.get(3));
         fragments.put(3, fragmentMap.get(4));
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        showAlertMessageExitingApp();
+    }
+
+    public void showAlertMessageExitingApp(){
+        new AlertDialog.Builder(this)
+                .setTitle("title")
+                .setMessage("Are you currently shire to want to exit this app?")
+                .setPositiveButton("Yes", ((dialogInterface, i) -> {
+                    Toast.makeText(this, "text", Toast.LENGTH_SHORT).show();
+                }))
+                .setNegativeButton("No", ((dialogInterface, i) -> {
+                    Toast.makeText(this, "text2", Toast.LENGTH_SHORT).show();
+                }))
+                .show();
     }
 
 
