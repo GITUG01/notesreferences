@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
@@ -20,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements SelectListener, CategoryProductListFragment.hideKeyboard, CreateNoteFragment.hideKeyboardCreateNote, CreateNoteFragment.startTemporaryFragment, CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CategoryViewHolder.OnCategoryListener {
+public class MainActivity extends AppCompatActivity implements OnBackButton, SelectListener, CategoryProductListFragment.hideKeyboard, CreateNoteFragment.hideKeyboardCreateNote, CreateNoteFragment.startTemporaryFragment, CreateNoteFragment.startCategoryDayNoteFragment, CreateNoteFragment.startCategoryLongTermFragment, CategoryViewHolder.OnCategoryListener {
     public final static String DATA_TEMPORARY = "dadaFromTemporary";
     public final static String DATA_TEMPORARY_TO_MAIN = "dadaFromTemporaryToMain";
     public final static String DATA_LONG_TERM = "dataFromLongTerm";
@@ -117,27 +117,27 @@ public class MainActivity extends AppCompatActivity implements SelectListener, C
         fragments.put(2, fragmentMap.get(3));
         fragments.put(3, fragmentMap.get(4));
 
-
     }
 
     @Override
     public void onBackPressed() {
-        showAlertMessageExitingApp();
-    }
 
-    public void showAlertMessageExitingApp(){
-        new AlertDialog.Builder(this)
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof OnBackButton) {
+                    new AlertDialog.Builder(this)
                 .setTitle("title")
                 .setMessage("Are you currently shire to want to exit this app?")
                 .setPositiveButton("Yes", ((dialogInterface, i) -> {
-                    Toast.makeText(this, "text", Toast.LENGTH_SHORT).show();
+                    finish();
                 }))
                 .setNegativeButton("No", ((dialogInterface, i) -> {
                     Toast.makeText(this, "text2", Toast.LENGTH_SHORT).show();
                 }))
                 .show();
+        } else {
+            super.onBackPressed();
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -259,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements SelectListener, C
     public void onItemClicked(NoteEntity noteEntity) {
         Toast.makeText(this, noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
     }
+
 
     static class BDHelper extends SQLiteOpenHelper {
 

@@ -1,19 +1,20 @@
 package com.example.notesreferences;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notesreferences.categories.domain.CategoryEntity;
 import com.example.notesreferences.categoryFragments.CategoryDayNoteFragment;
@@ -30,25 +31,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class MainActivityFragment extends Fragment implements SelectListener {
+interface closeApp {
+    void close();
+}
 
+public class MainActivityFragment extends Fragment implements  OnBackButton, SelectListener{
+
+    //    private NoteAdapterMainFragment adapter1 = new NoteAdapterMainFragment();
+    public final static String TABLE_NAME = "mytable";
+    public List<CategoryEntity> categories = new ArrayList<>();
     RecyclerView recyclerView;
     RecyclerView recyclerItem;
     NoteRepo noteRepo = new NoteRepoImpl();
-    private NotesAdapter adapter = new NotesAdapter(this);
-//    private NoteAdapterMainFragment adapter1 = new NoteAdapterMainFragment();
-    public final static String TABLE_NAME = "mytable";
-    private MainActivity.BDHelper bdHelper;
     SQLiteDatabase bd;
-    public List<CategoryEntity> categories = new ArrayList<>();
+    Map<Integer, Fragment> fragmentMap = new HashMap<>();
+    boolean running = false;
+    private NotesAdapter adapter = new NotesAdapter(this);
+    private MainActivity.BDHelper bdHelper;
     private Map<Integer, Fragment> fragments = new HashMap<>();
     private List<Integer> notesList = new ArrayList<>();
-    Map<Integer, Fragment> fragmentMap = new HashMap<>();
+    private OnBackButton onBackButton;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.onBackButton = (OnBackButton) context;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main_screen, container, false);
+
     }
 
     @Override
@@ -59,7 +75,6 @@ public class MainActivityFragment extends Fragment implements SelectListener {
         adapter.setData(noteRepo.notes());
 
         fragmentMap.put(0, new CreateNoteFragment());
-
 
 
         categories.add(new CategoryEntity(1, "Day note"));
@@ -89,6 +104,7 @@ public class MainActivityFragment extends Fragment implements SelectListener {
         });
     }
 
+
     private void setCategoryAdapter(List<CategoryEntity> categoryEmptyList) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
@@ -99,4 +115,5 @@ public class MainActivityFragment extends Fragment implements SelectListener {
     public void onItemClicked(NoteEntity noteEntity) {
         Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
     }
+
 }
