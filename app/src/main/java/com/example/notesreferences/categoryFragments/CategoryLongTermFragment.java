@@ -28,7 +28,7 @@ import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
 import com.example.notesreferences.ui.SelectListener;
 
-public class CategoryLongTermFragment extends Fragment implements SelectListener{
+public class CategoryLongTermFragment extends Fragment implements SelectListener {
 
     public final static String LONG_TERM_TABLE_NAME = "LongTermTable";
     public static BDHelper bdHelper;
@@ -88,7 +88,7 @@ public class CategoryLongTermFragment extends Fragment implements SelectListener
         Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
     }
 
-    public void readDataBase(){
+    public void readDataBase() {
         bdHelper = new BDHelper(getContext());
         bd = bdHelper.getReadableDatabase();
 
@@ -123,7 +123,7 @@ public class CategoryLongTermFragment extends Fragment implements SelectListener
             int columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY);
 
             do {
-                Log.d("@@@ mylogs", "Table: " +LONG_TERM_TABLE_NAME + "Note № " + c.getInt(columnID) +
+                Log.d("@@@ mylogs", "Table: " + LONG_TERM_TABLE_NAME + "Note № " + c.getInt(columnID) +
                         " Title: " + c.getString(columnTitle) +
                         " Description: " + c.getString(columnDescription));
             } while (c.moveToNext());
@@ -149,6 +149,7 @@ public class CategoryLongTermFragment extends Fragment implements SelectListener
 //        result.putSerializable("gg", (Serializable) noteEntity);
         getParentFragmentManager().setFragmentResult(MainActivity.DATA_T0_EDIT, result);
     }
+
 
     static class BDHelper extends SQLiteOpenHelper {
 

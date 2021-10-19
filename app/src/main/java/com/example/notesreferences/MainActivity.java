@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -19,7 +20,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +36,8 @@ import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
 import com.example.notesreferences.ui.SelectListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
     Map<Integer, Fragment> fragmentMap = new HashMap<>();
     private Toolbar toolbar;
     private BDHelper bdHelper;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +120,32 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         fragments.put(2, fragmentMap.get(3));
         fragments.put(3, fragmentMap.get(4));
 
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragment_container, new CreateNoteFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case 0:
+                Toast.makeText(this, "case 0", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                Toast.makeText(this, "case 1", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -126,12 +155,11 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         if (fragment instanceof OnBackButton) {
                     new AlertDialog.Builder(this)
                 .setTitle("title")
-                .setMessage("Are you currently shire to want to exit this app?")
-                .setPositiveButton("Yes", ((dialogInterface, i) -> {
+                .setMessage("Confirm exciting app")
+                .setPositiveButton("Confirm", ((dialogInterface, i) -> {
                     finish();
                 }))
                 .setNegativeButton("No", ((dialogInterface, i) -> {
-                    Toast.makeText(this, "text2", Toast.LENGTH_SHORT).show();
                 }))
                 .show();
         } else {
@@ -150,12 +178,12 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
 
         switch (item.getItemId()) {
             case R.id.add_note:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.fragment_container, new CreateNoteFragment())
-                        .addToBackStack(null)
-                        .commit();
-                Toast.makeText(this, "Add note", Toast.LENGTH_SHORT).show();
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .add(R.id.fragment_container, new CreateNoteFragment())
+//                        .addToBackStack(null)
+//                        .commit();
+//                Toast.makeText(this, "Add note", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.del_menu:
                 Toast.makeText(this, "Remove menu", Toast.LENGTH_SHORT).show();

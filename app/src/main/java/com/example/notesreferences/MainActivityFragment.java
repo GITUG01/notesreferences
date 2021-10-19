@@ -116,4 +116,5 @@ public class MainActivityFragment extends Fragment implements  OnBackButton, Sel
         Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
+
 }

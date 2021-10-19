@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -158,6 +157,10 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
 
     }
 
+    interface sendDataToEdit {
+        void sendDataToEdit();
+    }
+
     static class BDHelper extends SQLiteOpenHelper {
 
         public BDHelper(@Nullable Context context) {
@@ -176,9 +179,5 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
         }
-    }
-
-    interface sendDataToEdit {
-        void sendDataToEdit();
     }
 }

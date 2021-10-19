@@ -1,5 +1,7 @@
 package com.example.notesreferences.domain;
 
+import android.view.View;
+
 import androidx.annotation.Nullable;
 
 public class NoteEntity {
@@ -7,6 +9,7 @@ public class NoteEntity {
     private Integer id;
     private String title;
     private String detale;
+    private View view;
 
 
     public NoteEntity(String title, String detale) {
