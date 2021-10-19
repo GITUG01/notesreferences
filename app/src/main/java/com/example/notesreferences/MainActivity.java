@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         if (fragment instanceof OnBackButton) {
                     new AlertDialog.Builder(this)
                 .setTitle("title")
-                .setMessage("Are you currently shire to want to exit this app?")
-                .setPositiveButton("Yes", ((dialogInterface, i) -> {
+                .setMessage("Confirm exciting the app")
+                .setPositiveButton("Confirm", ((dialogInterface, i) -> {
                     finish();
                 }))
                 .setNegativeButton("No", ((dialogInterface, i) -> {
