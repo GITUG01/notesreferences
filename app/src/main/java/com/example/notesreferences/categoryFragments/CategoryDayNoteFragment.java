@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -29,6 +30,8 @@ import com.example.notesreferences.ui.NotesAdapter;
 import com.example.notesreferences.ui.SelectListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryDayNoteFragment extends Fragment implements SelectListener, Serializable {
 
@@ -41,6 +44,7 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
     private NotesAdapter adapter = new NotesAdapter(this);
     private String title1;
     private String description1;
+    private List<NoteEntity> noteEntities = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,27 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
         });
     }
 
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case 0:
+
+                Toast.makeText(getContext(), "case 0", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                adapter.setData(noteRepo.removeAll());
+
+                int clearCount = bd.delete(DAY_NOTE_TABLE_NAME, null, null);
+                Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
+
+                Toast.makeText(getContext(), "case 1", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
     public void DataBase(String title, String description) {
         bdHelper = new BDHelper(getContext());
         ContentValues cv = new ContentValues();
@@ -90,8 +115,6 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
 
         bd.insert(DAY_NOTE_TABLE_NAME, null, cv);
 
-//      int clearCount = bd.delete(DAY_NOTE_TABLE_NAME, null, null);
-//      Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
 
         Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
     }

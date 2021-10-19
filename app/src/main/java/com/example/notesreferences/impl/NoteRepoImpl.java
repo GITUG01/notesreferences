@@ -8,7 +8,7 @@ import java.util.List;
 
 public class NoteRepoImpl implements NoteRepo {
 
-    private final ArrayList<NoteEntity> cache = new ArrayList<>();
+    private ArrayList<NoteEntity> cache = new ArrayList<>();
     private int counter = 0;
 
     @Override
@@ -33,6 +33,11 @@ public class NoteRepoImpl implements NoteRepo {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<NoteEntity> removeAll() {
+        return cache = new ArrayList<>();
     }
 
     @Override

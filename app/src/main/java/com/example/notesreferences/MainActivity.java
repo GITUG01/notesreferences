@@ -133,20 +133,20 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         });
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()){
-            case 0:
-                Toast.makeText(this, "case 0", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
-                Toast.makeText(this, "case 1", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-        return super.onContextItemSelected(item);
-    }
+//    @Override
+//    public boolean onContextItemSelected(@NonNull MenuItem item) {
+//
+//        switch (item.getItemId()){
+//            case 0:
+//                Toast.makeText(this, "case 0", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 1:
+//                Toast.makeText(this, "case 1", Toast.LENGTH_SHORT).show();
+//                break;
+//        }
+//
+//        return super.onContextItemSelected(item);
+//    }
 
     @Override
     public void onBackPressed() {
