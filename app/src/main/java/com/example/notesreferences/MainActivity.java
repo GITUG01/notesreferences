@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -85,10 +84,6 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.my_toolbar);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            toolbar.setTooltipText("hello");
-        }
         setSupportActionBar(toolbar);
 
 
