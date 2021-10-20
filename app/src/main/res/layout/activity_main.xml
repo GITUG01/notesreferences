@@ -20,19 +20,18 @@
 
         android:background="@color/background_menu">
 
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@color/background_menu"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/cogwheel_83806" />
+<!--        <ImageButton-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@color/background_menu"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            app:srcCompat="@drawable/cogwheel_83806" />-->
 
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/app_title"
             android:textSize="30sp" />
 
     </androidx.appcompat.widget.Toolbar>

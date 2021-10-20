@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -73,6 +74,27 @@ public class CategoryLongTermFragment extends Fragment implements SelectListener
                 writeDataBase();
             }
         });
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case 0:
+
+                Toast.makeText(getContext(), "case 0", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                adapter.setData(noteRepo.removeAll());
+
+                int clearCount = bd.delete(LONG_TERM_TABLE_NAME, null, null);
+                Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
+
+                Toast.makeText(getContext(), "case 1", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     public void DataBase(String title, String description) {

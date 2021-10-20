@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -84,7 +85,13 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.my_toolbar);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            toolbar.setTooltipText("hello");
+        }
         setSupportActionBar(toolbar);
+
+
 
         fragmentMap.put(0, mainActivityFragment);
         fragmentMap.put(1, categoryDayNoteFragment);
@@ -102,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         navigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
-                    replaceFragment(R.id.fragment_container, 0);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, Objects.requireNonNull(fragments.get(4)))
+                            .commit();
             }
             return false;
         });
@@ -115,10 +125,11 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
 
         setCategoryAdapter(categories);
 
-        fragments.put(0, fragmentMap.get(1));
-        fragments.put(1, fragmentMap.get(2));
-        fragments.put(2, fragmentMap.get(3));
-        fragments.put(3, fragmentMap.get(4));
+        fragments.put(0, new CategoryDayNoteFragment());
+        fragments.put(1, new CategoryLongTermFragment());
+        fragments.put(2, new CategoryTemporaryFragment());
+        fragments.put(3, new CategoryProductListFragment());
+        fragments.put(4, mainActivityFragment);
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
                         .commit();
             }
         });
+
+
     }
 
 //    @Override
@@ -250,7 +263,10 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
 
     @Override
     public void startCategoryDayNoteFragment() {
-        replaceFragment(R.id.fragment_container, 1);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, Objects.requireNonNull(fragments.get(0)))
+                .commit();
     }
 
     @Override

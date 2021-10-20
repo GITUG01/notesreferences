@@ -48,8 +48,15 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("watch", "start: " + hashCode());
         super.onCreate(savedInstanceState);
         readDataBase();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("watch", "resume" + hashCode());
+        super.onResume();
     }
 
     @Override
@@ -202,5 +209,18 @@ public class CategoryDayNoteFragment extends Fragment implements SelectListener,
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
         }
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("Watch", "pause" + hashCode());
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("watch", "destroy" + hashCode());
+        adapter.setData(noteRepo.removeAll());
+        super.onDestroy();
     }
 }
