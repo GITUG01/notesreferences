@@ -53,8 +53,9 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            app:layout_constraintBottom_toTopOf="@+id/bottom_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="NotSibling">
 
             <FrameLayout
                 android:id="@+id/note_fragment_container"
@@ -72,6 +73,7 @@
         </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

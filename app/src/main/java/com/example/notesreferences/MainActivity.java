@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnBackButton, Sel
         categories.add(new CategoryEntity(2, "Long-term"));
         categories.add(new CategoryEntity(3, "Temporary"));
         categories.add(new CategoryEntity(3, "Product list"));
-        categories.add(new CategoryEntity(3, "And something else"));
+        categories.add(new CategoryEntity(3, "Create custom category"));
 
         setCategoryAdapter(categories);
 
