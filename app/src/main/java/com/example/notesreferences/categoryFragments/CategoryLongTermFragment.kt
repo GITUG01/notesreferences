@@ -1,195 +1,165 @@
-package com.example.notesreferences.categoryFragments;
+package com.example.notesreferences.categoryFragments
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+import com.example.notesreferences.ui.SelectListener
+import com.example.notesreferences.domain.NoteRepo
+import com.example.notesreferences.impl.NoteRepoImpl
+import androidx.recyclerview.widget.RecyclerView
+import android.database.sqlite.SQLiteDatabase
+import com.example.notesreferences.ui.NotesAdapter
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.example.notesreferences.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.notesreferences.MainActivity
+import androidx.fragment.app.FragmentResultListener
+import com.example.notesreferences.domain.NoteEntity
+import android.widget.Toast
+import com.example.notesreferences.categoryFragments.CategoryLongTermFragment
+import android.content.ContentValues
+import android.content.Context
+import com.example.notesreferences.EditNoteFragment
+import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import androidx.fragment.app.Fragment
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.notesreferences.EditNoteFragment;
-import com.example.notesreferences.MainActivity;
-import com.example.notesreferences.R;
-import com.example.notesreferences.domain.NoteEntity;
-import com.example.notesreferences.domain.NoteRepo;
-import com.example.notesreferences.impl.NoteRepoImpl;
-import com.example.notesreferences.ui.NotesAdapter;
-import com.example.notesreferences.ui.SelectListener;
-
-public class CategoryLongTermFragment extends Fragment implements SelectListener {
-
-    public final static String LONG_TERM_TABLE_NAME = "LongTermTable";
-    public static BDHelper bdHelper;
-    public NoteRepo noteRepo = new NoteRepoImpl();
-    RecyclerView recyclerView;
-    SQLiteDatabase bd;
-    private NotesAdapter adapter = new NotesAdapter(this);
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        readDataBase();
+class CategoryLongTermFragment : Fragment(), SelectListener {
+    var noteRepo: NoteRepo = NoteRepoImpl()
+    var recyclerView: RecyclerView? = null
+    var bd: SQLiteDatabase? = null
+    private val adapter = NotesAdapter(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        readDataBase()
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_category_long_term, container, false);
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_category_long_term, container, false)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerView = view.findViewById(R.id.recycler_long_term)
+        recyclerView?.setLayoutManager(LinearLayoutManager(context))
+        recyclerView?.setAdapter(adapter)
+        adapter.setData(noteRepo.notes())
+        super.onViewCreated(view, savedInstanceState)
+        parentFragmentManager.setFragmentResultListener(
+            MainActivity.DATA_LONG_TERM,
+            this,
+            FragmentResultListener { requestKey, result ->
+                val title = result.getString("title")
+                val description = result.getString("description")
+                noteRepo.addNote(NoteEntity(title, description))
+                DataBase(title, description)
+                writeDataBase()
+            })
+    }
 
-        recyclerView = view.findViewById(R.id.recycler_long_term);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-        adapter.setData(noteRepo.notes());
-
-
-        super.onViewCreated(view, savedInstanceState);
-
-
-        getParentFragmentManager().setFragmentResultListener(MainActivity.DATA_LONG_TERM, this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                String title = result.getString("title");
-                String description = result.getString("description");
-
-                noteRepo.addNote(new NoteEntity(title, description));
-
-                DataBase(title, description);
-                writeDataBase();
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            0 -> Toast.makeText(context, "case 0", Toast.LENGTH_SHORT).show()
+            1 -> {
+                adapter.setData(noteRepo.removeAll())
+                val clearCount = bd!!.delete(LONG_TERM_TABLE_NAME, null, null)
+                Log.d("@@@ mylogs", "deleted rows count = $clearCount")
+                Toast.makeText(context, "case 1", Toast.LENGTH_SHORT).show()
             }
-        });
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()){
-            case 0:
-
-                Toast.makeText(getContext(), "case 0", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
-                adapter.setData(noteRepo.removeAll());
-
-                int clearCount = bd.delete(LONG_TERM_TABLE_NAME, null, null);
-                Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
-
-                Toast.makeText(getContext(), "case 1", Toast.LENGTH_SHORT).show();
-                break;
         }
-
-        return super.onContextItemSelected(item);
+        return super.onContextItemSelected(item)
     }
 
-    public void DataBase(String title, String description) {
-        bdHelper = new BDHelper(getContext());
-        ContentValues cv = new ContentValues();
-
-        bd = bdHelper.getWritableDatabase();
-
-        cv.put(MainActivity.TITLE_KEY, title);
-        cv.put(MainActivity.DESCRIPTION_KEY, description);
-
-        bd.insert(LONG_TERM_TABLE_NAME, null, cv);
-        Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
+    fun DataBase(title: String?, description: String?) {
+        bdHelper = BDHelper(
+            context
+        )
+        val cv = ContentValues()
+        bd = bdHelper!!.writableDatabase
+        cv.put(MainActivity.TITLE_KEY, title)
+        cv.put(MainActivity.DESCRIPTION_KEY, description)
+        bd!!.insert(LONG_TERM_TABLE_NAME, null, cv)
+        Log.d("@@@ mylogs", "Create note. Title: $title Description: $description")
     }
 
-    public void readDataBase() {
-        bdHelper = new BDHelper(getContext());
-        bd = bdHelper.getReadableDatabase();
-
-        Cursor c = bd.query(LONG_TERM_TABLE_NAME, null, null, null, null, null, null);
-
+    fun readDataBase() {
+        bdHelper = BDHelper(
+            context
+        )
+        bd = bdHelper!!.readableDatabase
+        val c = bd!!.query(LONG_TERM_TABLE_NAME, null, null, null, null, null, null)
         if (c.moveToFirst()) {
-            int columnID = c.getColumnIndex("id");
-            int columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY);
-            int columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY);
-
+            val columnID = c.getColumnIndex("id")
+            val columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY)
+            val columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY)
             do {
-                noteRepo.addNote(new NoteEntity(c.getString(columnTitle), c.getString(columnDescription)));
-            } while (c.moveToNext());
-
+                noteRepo.addNote(
+                    NoteEntity(
+                        c.getString(columnTitle),
+                        c.getString(columnDescription)
+                    )
+                )
+            } while (c.moveToNext())
         } else {
-            Log.d("@@@ mylogs", "That's all");
+            Log.d("@@@ mylogs", "That's all")
         }
-        c.close();
+        c.close()
     }
 
-
-//    int clearCount = db.delete("mytable", null, null);
-//      Log.d(LOG_TAG, "deleted rows count = " + clearCount);
-
-
-    public void writeDataBase() {
-        Cursor c = bd.query(LONG_TERM_TABLE_NAME, null, null, null, null, null, null);
-
+    //    int clearCount = db.delete("mytable", null, null);
+    //      Log.d(LOG_TAG, "deleted rows count = " + clearCount);
+    fun writeDataBase() {
+        val c = bd!!.query(LONG_TERM_TABLE_NAME, null, null, null, null, null, null)
         if (c.moveToFirst()) {
-            int columnID = c.getColumnIndex("id");
-            int columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY);
-            int columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY);
-
+            val columnID = c.getColumnIndex("id")
+            val columnTitle = c.getColumnIndex(MainActivity.TITLE_KEY)
+            val columnDescription = c.getColumnIndex(MainActivity.DESCRIPTION_KEY)
             do {
-                Log.d("@@@ mylogs", "Table: " + LONG_TERM_TABLE_NAME + "Note № " + c.getInt(columnID) +
-                        " Title: " + c.getString(columnTitle) +
-                        " Description: " + c.getString(columnDescription));
-            } while (c.moveToNext());
-
+                Log.d(
+                    "@@@ mylogs",
+                    "Table: " + LONG_TERM_TABLE_NAME + "Note № " + c.getInt(columnID) +
+                            " Title: " + c.getString(columnTitle) +
+                            " Description: " + c.getString(columnDescription)
+                )
+            } while (c.moveToNext())
         } else {
-            Log.d("@@@ mylogs", "That's all");
+            Log.d("@@@ mylogs", "That's all")
         }
-        c.close();
+        c.close()
     }
 
-    @Override
-    public void onItemClicked(NoteEntity noteEntity) {
-        Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
-        getParentFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new EditNoteFragment())
-                .addToBackStack(null)
-                .commit();
-
-        Bundle result = new Bundle();
-        result.putString("title", noteEntity.getTitle());
-        result.putString("description", noteEntity.getDetale());
-//        result.putSerializable("gg", (Serializable) noteEntity);
-        getParentFragmentManager().setFragmentResult(MainActivity.DATA_T0_EDIT, result);
+    override fun onItemClicked(noteEntity: NoteEntity) {
+        Toast.makeText(context, noteEntity.title, Toast.LENGTH_SHORT).show()
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, EditNoteFragment())
+            .addToBackStack(null)
+            .commit()
+        val result = Bundle()
+        result.putString("title", noteEntity.title)
+        result.putString("description", noteEntity.detale)
+        //        result.putSerializable("gg", (Serializable) noteEntity);
+        parentFragmentManager.setFragmentResult(MainActivity.DATA_T0_EDIT, result)
     }
 
-
-    static class BDHelper extends SQLiteOpenHelper {
-
-        public BDHelper(@Nullable Context context) {
-            super(context, LONG_TERM_TABLE_NAME, null, 1);
+    class BDHelper(context: Context?) : SQLiteOpenHelper(context, LONG_TERM_TABLE_NAME, null, 1) {
+        override fun onCreate(sqLiteDatabase: SQLiteDatabase) {
+            sqLiteDatabase.execSQL(
+                "create table " + LONG_TERM_TABLE_NAME + " ("
+                        + "id integer primary key autoincrement,"
+                        + "description text,"
+                        + "title text" + ");"
+            )
         }
 
-        @Override
-        public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.execSQL("create table " + LONG_TERM_TABLE_NAME + " ("
-                    + "id integer primary key autoincrement,"
-                    + "description text,"
-                    + "title text" + ");");
-        }
+        override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, i: Int, i1: Int) {}
+    }
 
-        @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
-        }
+    companion object {
+        const val LONG_TERM_TABLE_NAME = "LongTermTable"
+        var bdHelper: BDHelper? = null
     }
 }
