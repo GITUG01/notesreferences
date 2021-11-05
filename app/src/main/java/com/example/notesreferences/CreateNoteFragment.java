@@ -25,13 +25,15 @@ public class CreateNoteFragment extends Fragment {
     private startCategoryDayNoteFragment startCategoryDayNoteFragment;
     private startCategoryLongTermFragment startCategoryLongTermFragment;
     private startTemporaryFragment startTemporaryFragment;
+    private hideKeyboardCreateNote hideKeyboardCreateNote;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.startCategoryDayNoteFragment = (startCategoryDayNoteFragment) context;
-        this.startCategoryLongTermFragment = (startCategoryLongTermFragment)context;
-        this.startTemporaryFragment = (startTemporaryFragment)context;
+        this.startCategoryLongTermFragment = (startCategoryLongTermFragment) context;
+        this.startTemporaryFragment = (startTemporaryFragment) context;
+        this.hideKeyboardCreateNote = (hideKeyboardCreateNote) context;
     }
 
     @Override
@@ -72,6 +74,7 @@ public class CreateNoteFragment extends Fragment {
                 startTemporaryFragment.startTemporaryFragment();
             } else {
                 Toast.makeText(getContext(), "Please, choose category", Toast.LENGTH_SHORT).show();
+                hideKeyboardCreateNote.hideKeyboardCreateNote();
             }
 
         });
@@ -94,5 +97,9 @@ public class CreateNoteFragment extends Fragment {
 
     interface startTemporaryFragment {
         void startTemporaryFragment();
+    }
+
+    interface hideKeyboardCreateNote {
+        void hideKeyboardCreateNote();
     }
 }

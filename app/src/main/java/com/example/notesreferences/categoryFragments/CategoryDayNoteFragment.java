@@ -1,4 +1,4 @@
-package com.example.notesreferences;
+package com.example.notesreferences.categoryFragments;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +20,20 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notesreferences.EditNoteFragment;
+import com.example.notesreferences.MainActivity;
+import com.example.notesreferences.R;
 import com.example.notesreferences.domain.NoteEntity;
 import com.example.notesreferences.domain.NoteRepo;
 import com.example.notesreferences.impl.NoteRepoImpl;
 import com.example.notesreferences.ui.NotesAdapter;
+import com.example.notesreferences.ui.SelectListener;
 
-public class CategoryDayNoteFragment extends Fragment {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CategoryDayNoteFragment extends Fragment implements SelectListener, Serializable {
 
 
     public final static String DAY_NOTE_TABLE_NAME = "DayNoteTable";
@@ -31,14 +41,22 @@ public class CategoryDayNoteFragment extends Fragment {
     public NoteRepo noteRepo = new NoteRepoImpl();
     RecyclerView recyclerView;
     SQLiteDatabase bd;
-    private NotesAdapter adapter = new NotesAdapter();
-    private String title;
-    private String description;
+    private NotesAdapter adapter = new NotesAdapter(this);
+    private String title1;
+    private String description1;
+    private List<NoteEntity> noteEntities = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("watch", "start: " + hashCode());
         super.onCreate(savedInstanceState);
         readDataBase();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("watch", "resume" + hashCode());
+        super.onResume();
     }
 
     @Override
@@ -53,6 +71,7 @@ public class CategoryDayNoteFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         adapter.setData(noteRepo.notes());
 
+
         super.onViewCreated(view, savedInstanceState);
 
 
@@ -66,8 +85,30 @@ public class CategoryDayNoteFragment extends Fragment {
 
                 DataBase(title, description);
                 writeDataBase();
+
             }
         });
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case 0:
+
+                Toast.makeText(getContext(), "case 0", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                adapter.setData(noteRepo.removeAll());
+
+                int clearCount = bd.delete(DAY_NOTE_TABLE_NAME, null, null);
+                Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
+
+                Toast.makeText(getContext(), "case 1", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     public void DataBase(String title, String description) {
@@ -81,8 +122,6 @@ public class CategoryDayNoteFragment extends Fragment {
 
         bd.insert(DAY_NOTE_TABLE_NAME, null, cv);
 
-//      int clearCount = bd.delete(DAY_NOTE_TABLE_NAME, null, null);
-//      Log.d("@@@ mylogs", "deleted rows count = " + clearCount);
 
         Log.d("@@@ mylogs", "Create note. Title: " + title + " Description: " + description);
     }
@@ -131,6 +170,27 @@ public class CategoryDayNoteFragment extends Fragment {
         c.close();
     }
 
+    @Override
+    public void onItemClicked(NoteEntity noteEntity) {
+        Toast.makeText(getContext(), noteEntity.getTitle(), Toast.LENGTH_SHORT).show();
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new EditNoteFragment())
+                .addToBackStack(null)
+                .commit();
+
+        Bundle result = new Bundle();
+        result.putString("title", noteEntity.getTitle());
+        result.putString("description", noteEntity.getDetale());
+//        result.putSerializable("gg", (Serializable) noteEntity);
+        getParentFragmentManager().setFragmentResult(MainActivity.DATA_T0_EDIT, result);
+
+    }
+
+    interface sendDataToEdit {
+        void sendDataToEdit();
+    }
+
     static class BDHelper extends SQLiteOpenHelper {
 
         public BDHelper(@Nullable Context context) {
@@ -149,5 +209,18 @@ public class CategoryDayNoteFragment extends Fragment {
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
         }
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("Watch", "pause" + hashCode());
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("watch", "destroy" + hashCode());
+        adapter.setData(noteRepo.removeAll());
+        super.onDestroy();
     }
 }
